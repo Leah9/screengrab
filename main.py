@@ -25,8 +25,6 @@ class App:
     def get_box(self):  # Returns the box dimensions in the correct format
         return self.x1, self.y1, self.x2, self.y2
 
-        return
-
 capture = App(408, 146, 1683, 1037)
 print("get box :" + str(capture.get_box()))
 pyautogui.FAILSAFE = True
@@ -64,7 +62,7 @@ def capture_button_clicked():
     image = pyscreenshot.grab(bbox=(capture.get_box()))
     if capture.show_image:
         image.show()
-    image.save(f"image{capture.image_no}.png")
+    image.save(f"img/image{capture.image_no}.png")
     capture.image_no += 1
     print(capture.image_no)
 
@@ -81,15 +79,15 @@ def create_pdf_button_clicked():
     print("Getting list of images from img folder")
     images_list = [x for x in os.listdir('img')]
     print(images_list)
-    pdf = FPDF('l', 'pt', 'A4') # Init pdf args are l = landscape, pt = points / pixels, A4 default size
+    pdf = FPDF('l', 'pt', 'A4') # Init pdf l = landscape, pt = points / pixels, A4 default size
     pdf.set_auto_page_break(0)
     pdf.set_margin(0)
     for img in images_list:
-        timage = Image.open(img)
+        timage = Image.open(f"img/{img}")
         print(timage.width, timage.height)
         # Below will add a page the same size as the image.
         pdf.add_page(format=(timage.height, timage.width))
-        pdf.image(img)
+        pdf.image(f"img/{img}")
     pdf.output("Binder.pdf")
 
 # Define the buttons
@@ -103,11 +101,7 @@ auto_button.pack()
 create_pdf_button = tk.Button(root, text='Create pdf', command=lambda : create_pdf_button_clicked())
 create_pdf_button.pack()
 message.pack()
+
+# Start the GUI
 root.mainloop()
 
-# im=pyscreenshot.grab(bbox=(x1,x2,y1,y2))
-
-# To view the screenshot
-# image.show()
-
-# image.save("image.png")
