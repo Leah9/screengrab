@@ -14,6 +14,7 @@ class App:
         self.y2 = y2
         self.image_no = 1001
         self.show_image = False
+        self.pages = 486
 
     def get_number(self):
         return int(self.x1)
@@ -52,9 +53,8 @@ def get_box_button_clicked():
     print(capture.get_box())
     # print(pyautogui.position())
 
-
 # Called when the Capture button is clicked
-def button_clicked():
+def capture_button_clicked():
     print('Button clicked')
     image = pyscreenshot.grab(bbox=(capture.get_box()))
     if capture.show_image:
@@ -63,12 +63,23 @@ def button_clicked():
     capture.image_no += 1
     print(capture.image_no)
 
+def auto_button_clicked():
+    capture.show_image = False
+    print("Starting auto capture in 5 seconds")
+    time.sleep(5)
+    for i in range(capture.pages):
+        capture_button_clicked()
+        pyautogui.press('down')
+        print(f"Captured image {capture.image_no}")
+
 # Define the buttons
-button = tk.Button(root, text='Capture', command=lambda: button_clicked())
+capture_button = tk.Button(root, text='Capture', command=lambda: capture_button_clicked())
 # Pack the button, required.
-button.pack()
+capture_button.pack()
 get_box_button = tk.Button(root, text='Get Box', command=lambda: get_box_button_clicked())
 get_box_button.pack()
+auto_button = tk.Button(root, text='Auto mode, down arrow', command=lambda : auto_button_clicked())
+auto_button.pack()
 message.pack()
 root.mainloop()
 
