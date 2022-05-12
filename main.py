@@ -1,14 +1,13 @@
-#Use to grab docs from websites
+# Use to grab docs or images from screen one page at a time
 
 import pyscreenshot
 import pyautogui
-import random
 import time
 import tkinter as tk
 
-#Define the App class
+# Define the App class
 class App:
-    def __init__(self, x1 = 0, y1 = 0, x2 = 640, y2 = 480): # Use sensible defaults
+    def __init__(self, x1=0, y1=0, x2=640, y2=480):  # Use sensible defaults
         self.x1 = x1
         self.y1 = y1
         self.x2 = x2
@@ -19,42 +18,42 @@ class App:
     def get_number(self):
         return int(self.x1)
 
-    def get_box(self): # Returns the box dimensions in the correct format
-        return (self.x1, self.y1, self.x2, self.y2)
+    def get_box(self):  # Returns the box dimensions in the correct format
+        return self.x1, self.y1, self.x2, self.y2
 
-    #def __repr__(self):
-    #   return self.image_no
-
-
-capture = App(432, 240, 1989, 1334)
-#capture = App()
-print(capture.get_number())
+capture = App(408, 146, 1683, 1037)
 print("get box :" + str(capture.get_box()))
-
 pyautogui.FAILSAFE = True
 pyautogui.PAUSE = 2
-print(pyautogui.size()) #Prints screen resolution
-#width, height = pyautogui.size()
-root = tk.Tk()
-root.attributes('-topmost',True)
-#place a label on the root window
-message = tk.Label(root, text="Screencap")
+print(pyautogui.size())  # Prints screen resolution
+# width, height = pyautogui.size()
 
-#Function is called when the Get Box button is clicked
+# Init Tkinter call our GUI root
+root = tk.Tk()
+root.attributes('-topmost', True) # Keeps GUI on top
+# place a label on the root window
+message = tk.Label(root, text="ScreeGrab")
+
+
+# Function is called when the Get Box button is clicked
 def get_box_button_clicked():
     print("Top left position in 5 seconds")
     time.sleep(5)
-    x1y1 = pyautogui.position() # This gets the x and y position of the mouse the variable is an object
+    x1y1 = pyautogui.position()  # This gets the x and y position of the mouse the variable is an object
     print("Capturing bottom right in 5 seconds")
     time.sleep(5)
     x2y2 = pyautogui.position()
+    print("Captured area")
+    # update the values in the object
     capture.x1 = x1y1.x
     capture.y1 = x1y1.y
     capture.x2 = x2y2.x
     capture.y2 = x2y2.y
-    #print(pyautogui.position())
+    print(capture.get_box())
+    # print(pyautogui.position())
 
-#Called when the Capture button is clicked
+
+# Called when the Capture button is clicked
 def button_clicked():
     print('Button clicked')
     image = pyscreenshot.grab(bbox=(capture.get_box()))
@@ -64,19 +63,18 @@ def button_clicked():
     capture.image_no += 1
     print(capture.image_no)
 
-
+# Define the buttons
 button = tk.Button(root, text='Capture', command=lambda: button_clicked())
+# Pack the button, required.
 button.pack()
 get_box_button = tk.Button(root, text='Get Box', command=lambda: get_box_button_clicked())
 get_box_button.pack()
 message.pack()
 root.mainloop()
 
-
-
 # im=pyscreenshot.grab(bbox=(x1,x2,y1,y2))
 
 # To view the screenshot
-#image.show()
+# image.show()
 
-#image.save("image.png")
+# image.save("image.png")
