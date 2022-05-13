@@ -1,5 +1,10 @@
 # Screen Grab
 
+## Important notes
+FPDF2 is required in order to create a pdf with the correct dimensions.
+To remove the older version if present run : pip uninstall fpdf
+To install the new version pip install fpdf2
+
 ## Intended Purpose
 To grab a user defined area of the screen repeatedly and save images for later processing.
 
