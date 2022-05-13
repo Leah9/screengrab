@@ -16,9 +16,9 @@ def main():
     # Init Tkinter call our GUI root
     root = App.MainWindow(408, 146, 1683, 1037)
 
-    print("get box :" + str(root.box))
+    print("get box :" + str(root.region))
     pyautogui.FAILSAFE = True
-    pyautogui.PAUSE = 2
+    pyautogui.PAUSE = 0.5
     print(pyautogui.size())  # Prints screen resolution
     # width, height = pyautogui.size()
 
