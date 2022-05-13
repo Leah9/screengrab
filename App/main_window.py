@@ -7,12 +7,14 @@ from tkinter import messagebox
 import pyautogui
 from PIL import Image
 from fpdf import FPDF
-from globals import IMG_DIR
+
+IMG_DIR = "img"
 
 
 # Define the App class
 class MainWindow(tk.Tk):
     """Main window"""
+
     def __init__(self, x1=0, y1=0, x2=640, y2=480):  # Use sensible defaults
         super().__init__()
         self.box = (x1, y1, x2, y2)
@@ -28,6 +30,7 @@ class MainWindow(tk.Tk):
             "button_bg": "#DEDEDE",
         }
         self._draw_screen()
+        self.IMG_DIR = "img"
 
     def _draw_screen(self):
         """This function is inteded to be called when constructing this class (in __init__).
@@ -81,14 +84,13 @@ class MainWindow(tk.Tk):
             command=self.create_pdf_button_clicked)
         create_pdf_button.pack(pady=2)
 
-
         # Text box for number of pages
         pages_entry_box = tk.Entry(
             self,
             justify=tk.CENTER,
             borderwidth=self.default_params["borderwidth"],
             width=self.default_params["width"],
-            textvariable = self.pages)
+            textvariable=self.pages)
         pages_entry_box.pack(pady=2)
 
     @property
@@ -101,7 +103,6 @@ class MainWindow(tk.Tk):
     #     """Property that returns a region."""
     #     return (self.x1, self.y1, self.x2 - self.x1, self.y2 - self.y1)
 
-
     # @property
     # def box(self):  # Returns the box dimensions in the correct format
     #     return self.x1, self.y1, self.x2, self.y2
@@ -112,7 +113,7 @@ class MainWindow(tk.Tk):
         messagebox.showinfo(
             title="Attention: TOP LEFT",
             message="Position your mouse and press enter to capture TOP LEFT position.",
-            icon="question", # This specific icon removes the bell noise from the messagebox.
+            icon="question",  # This specific icon removes the bell noise from the messagebox.
             parent=self
         )
         # print("Top left position in 5 seconds")
