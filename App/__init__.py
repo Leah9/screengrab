@@ -17,4 +17,4 @@ This should import all app windows."""
 # The dot before the file name means python should try to import a file in this same folder.
 # from .file import SomeClass, SomeVariable, SomeFunction, ...
 
-from .MainWindow import MainWindow
+from .main_window import MainWindow
