@@ -1,12 +1,13 @@
 """This file is where the Class of the main window of the App is implemented."""
 
 import os
-# import time
+import time
 import tkinter as tk
 from tkinter import messagebox
 import pyautogui
 from PIL import Image
 from fpdf import FPDF
+
 
 # Define the App class
 class MainWindow(tk.Tk):
@@ -14,8 +15,13 @@ class MainWindow(tk.Tk):
 
     def __init__(self, x1=0, y1=0, x2=640, y2=480):  # Use sensible defaults
         super().__init__()
-        self.box = (x1, y1, x2, y2)
-        self.region = (x1, y1, x2 - x1, y2 - y1)
+        self.x1 = x1
+        self.y1 = y1
+        self.x2 = x2
+        self.y2 = y2
+        # The below does not work
+        # self.box = (x1, y1, x2, y2)
+        # self.region = (self.x1, self.y1, self.x2 - self.x1, self.y2 - self.y1)
         self.image_no = 1001
         self.show_image = False
         self.pages = tk.IntVar()
@@ -28,6 +34,7 @@ class MainWindow(tk.Tk):
         }
         self._draw_screen()
         self.IMG_DIR = "img"
+        self.auto_hide = True
 
     def _draw_screen(self):
         """This function is inteded to be called when constructing this class (in __init__).
@@ -95,10 +102,10 @@ class MainWindow(tk.Tk):
         """Top left x is returned as an integer"""
         return int(self.box[0])
 
-    # @property
-    # def region(self):
-    #     """Property that returns a region."""
-    #     return (self.x1, self.y1, self.x2 - self.x1, self.y2 - self.y1)
+    #@property
+    def region(self):
+        """Property that returns a region."""
+        return (self.x1, self.y1, self.x2 - self.x1, self.y2 - self.y1)
 
     # @property
     # def box(self):  # Returns the box dimensions in the correct format
@@ -127,12 +134,13 @@ class MainWindow(tk.Tk):
         )
         # print("Capturing bottom right in 5 seconds")
         # time.sleep(5)
-
         x2y2 = pyautogui.position()
 
         # update the values in the object
-        self.box = (*x1y1, *x2y2)
-        messagebox.showinfo(title="Finished", message=f"Captured area was {self.box}", parent=self)
+        self.x1, self.y1 = x1y1
+        self.x2, self.y2 = x2y2
+        print(self.region())
+        messagebox.showinfo(title="Finished", message=f"Captured area was {self.region()}", parent=self)
 
         # print("Captured area")
         # print(self.box)
@@ -142,7 +150,15 @@ class MainWindow(tk.Tk):
     def capture_button_clicked(self):
         """This will capture an screen shot of the bounding box area when called."""
         print('Button clicked')
-        image = pyautogui.screenshot(region=self.region)
+        # Hide GUI while capture takes place only if auto hide is True
+        if self.auto_hide:
+            self.withdraw()
+            # Without the delay we capture a faded area of the GUI 0.2 seems to be the lowest delay
+            time.sleep(0.2)
+        image = pyautogui.screenshot(region=self.region())
+        # Show GUI when capture has taken place
+        if self.auto_hide:
+            self.deiconify()
         # image = pyscreenshot.grab(bbox=(self.box))
         if self.show_image:
             image.show()
@@ -154,13 +170,16 @@ class MainWindow(tk.Tk):
         """This will "auto click the capture button" (or, rather, call its function) for a
         \rgiven amount of times. That amount is written in the entry box."""
         self.show_image = False
-        messagebox.showinfo(
-            title="Attention",
-            message="Press enter to start capturing the screen.",
-            parent=self
-        )
-        # print("Starting auto capture in 5 seconds")
-        # time.sleep(5)
+        # This breaks auto capture, the 5 second delay is to allow the user to get focus on the intended app / site
+        # to advance through pages e.g. Box.com
+        # messagebox.showinfo(
+        #    title="Attention",
+        #    message="Press enter to start capturing the screen.",
+        #    parent=self
+        # )
+        print("Starting auto capture in 5 seconds")
+        self.auto_hide = False
+        time.sleep(5)
         for _ in range(self.pages.get()):
             self.capture_button_clicked()
             pyautogui.press('down')
