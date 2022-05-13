@@ -103,6 +103,8 @@ class MainWindow(tk.Tk):
             timage = Image.open(f"{IMG_DIR}/{img}")
             print(timage.width, timage.height)
             # Below will add a page the same size as the image.
-            pdf.add_page() # format=(timage.height, timage.width)) # format keyword gives out an error
+            pdf.add_page(format=(timage.height, timage.width))
+            # format=(timage.height, timage.width)) # format keyword gives out an error if using fpdf, fpdf2 is required
+            # pip uninstall fpdf, pip install fpdf2
             pdf.image(f"{IMG_DIR}/{img}")
         pdf.output("Binder.pdf")
