@@ -8,9 +8,6 @@ import pyautogui
 from PIL import Image
 from fpdf import FPDF
 
-IMG_DIR = "img"
-
-
 # Define the App class
 class MainWindow(tk.Tk):
     """Main window"""
@@ -149,7 +146,7 @@ class MainWindow(tk.Tk):
         # image = pyscreenshot.grab(bbox=(self.box))
         if self.show_image:
             image.show()
-        image.save(f"{IMG_DIR}/image{self.image_no}.png")
+        image.save(f"{self.IMG_DIR}/image{self.image_no}.png")
         self.image_no += 1
         print(self.image_no)
 
@@ -172,18 +169,18 @@ class MainWindow(tk.Tk):
     def create_pdf_button_clicked(self):
         """This function will concatenate all images in the IMG_DIR folder into a PDF."""
         print("Getting list of images from img folder")
-        images_list = os.listdir(IMG_DIR)
+        images_list = os.listdir(self.IMG_DIR)
         print(images_list)
         pdf = FPDF('l', 'pt', 'A4')  # Init pdf l = landscape, pt = points / pixels, A4 default size
         pdf.set_auto_page_break(True)
         pdf.set_margins(0, 0)
         for img in images_list:
-            timage = Image.open(f"{IMG_DIR}/{img}")
+            timage = Image.open(f"{self.IMG_DIR}/{img}")
             print(timage.width, timage.height)
             # Below will add a page the same size as the image.
             pdf.add_page(format=(timage.height, timage.width))
             # format keyword gives out an error if using fpdf, fpdf2 is required
             # pip uninstall fpdf, pip install fpdf2
-            pdf.image(f"{IMG_DIR}/{img}")
+            pdf.image(f"{self.IMG_DIR}/{img}")
         pdf.output("Binder.pdf")
         messagebox.showinfo(title="Success", message="Finished creating PDF.", parent=self)
