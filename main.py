@@ -10,21 +10,18 @@ import App
 def main():
     """Main function"""
 
-    # Checking if directory exists.
-
     # Init Tkinter call our GUI root
     root = App.MainWindow(0, 0, 1920, 1080)
 
-    if not os.path.exists(root.IMG_DIR):
-        # Creates it in case it doesn't
-        os.makedirs(root.IMG_DIR)
+    if not os.path.exists(root.img_dir):
+        os.makedirs(root.img_dir)
 
     print("get box :" + str(root.region))
     pyautogui.FAILSAFE = True
     pyautogui.PAUSE = 0.5
     print(pyautogui.size())  # Prints screen resolution
     # width, height = pyautogui.size()
-    print(root.IMG_DIR)
+    print(root.img_dir)
 
     # Start the GUI
     root.mainloop()

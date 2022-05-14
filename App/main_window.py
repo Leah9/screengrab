@@ -3,10 +3,11 @@
 import os
 import time
 import tkinter as tk
-from tkinter import messagebox
+from tkinter import messagebox, ttk
 import pyautogui
 from PIL import Image
 from fpdf import FPDF
+from . import top_levels
 
 
 class MainWindow(tk.Tk):
@@ -14,6 +15,7 @@ class MainWindow(tk.Tk):
 
     def __init__(self, x1=0, y1=0, x2=640, y2=480):  # Use sensible defaults
         super().__init__()
+        self.title("ScreenGrab")
         self.x1 = x1
         self.y1 = y1
         self.x2 = x2
@@ -22,81 +24,115 @@ class MainWindow(tk.Tk):
         self.show_image = False
         self.pages = tk.IntVar()
         self.pages.set(5)
-        self.default_params = {
-            "width": 20,
-            "pady": 5,
+        self.params = {
+            "width": 16,
+            "pady": 8,
+            "ipady": 12,
+            "padding": 2,
             "borderwidth": 3,
             "button_bg": "#DEDEDE",
         }
+
+        self.style = ttk.Style()
+        self.style.theme_use("vista")
+        self.style.configure("my.TButton", font="helvetica  12")
+
         self._draw_screen()
-        self.IMG_DIR = "img"
+        self.img_dir = "img"
         self.auto_hide = True
+
+        self.x_offset = int(0.05 * self.winfo_screenwidth())
+        self.y_offset = int(0.15 * self.winfo_screenheight())
+        self.geometry(f"+{self.x_offset}+{self.y_offset}")
 
     def _draw_screen(self):
         """This function is inteded to be called when constructing this class (in __init__).
         \rThis is where all the main widgets are supposed to be packed."""
 
         self.attributes("-topmost", True)  # Keeps GUI on top
-        self.config(padx=20, pady=20)
+        self.config(padx=35, pady=35)
         # Place a label on the root window
-        message = tk.Label(self, text="ScreenGrab")
-        message.pack(pady=2)
+        message = ttk.Label(self, text="ScreenGrab", font="arial 15")
+        message.grid(row=0, column=0, columnspan=3, pady=15)
 
-        # Define the buttons
-        capture_button = tk.Button(
-            self,
-            text="Capture",
-            borderwidth=self.default_params["borderwidth"],
-            bg=self.default_params["button_bg"],
-            width=self.default_params["width"],
-            pady=self.default_params["pady"],
-            command=self.capture_button_clicked,
-        )
-        # Pack the button, required.
-        capture_button.pack(pady=2)
-
-        get_box_button = tk.Button(
+        get_box_button = ttk.Button(
             self,
             text="Get Box",
-            borderwidth=self.default_params["borderwidth"],
-            bg=self.default_params["button_bg"],
-            width=self.default_params["width"],
-            pady=self.default_params["pady"],
+            width=self.params["width"],
+            style="my.TButton",
             command=self.get_box_button_clicked,
         )
-        get_box_button.pack(pady=2)
-
-        auto_button = tk.Button(
-            self,
-            text="Auto mode, down arrow",
-            borderwidth=self.default_params["borderwidth"],
-            bg=self.default_params["button_bg"],
-            width=self.default_params["width"],
-            pady=self.default_params["pady"],
-            command=self.auto_button_clicked,
+        get_box_button.grid(
+            row=1,
+            column=0,
+            padx=self.params["padding"],
+            pady=self.params["padding"],
+            ipady=self.params["ipady"],
         )
-        auto_button.pack(pady=2)
 
-        create_pdf_button = tk.Button(
+        # Define the buttons
+        capture_button = ttk.Button(
             self,
-            text="Create pdf",
-            borderwidth=self.default_params["borderwidth"],
-            bg=self.default_params["button_bg"],
-            width=self.default_params["width"],
-            pady=self.default_params["pady"],
-            command=self.create_pdf_button_clicked,
+            text="Capture",
+            width=self.params["width"],
+            style="my.TButton",
+            command=self.capture_button_clicked,
         )
-        create_pdf_button.pack(pady=2)
+        capture_button.grid(
+            row=2,
+            column=0,
+            padx=self.params["padding"],
+            pady=self.params["padding"],
+            ipady=self.params["ipady"],
+        )
 
         # Text box for number of pages
-        pages_entry_box = tk.Entry(
+        pages_entry_box_width = 4
+        pages_entry_box = ttk.Entry(
             self,
             justify=tk.CENTER,
-            borderwidth=self.default_params["borderwidth"],
-            width=self.default_params["width"],
+            width=pages_entry_box_width,
+            font="helvetica  12",
             textvariable=self.pages,
         )
-        pages_entry_box.pack(pady=2)
+        pages_entry_box.grid(
+            row=1,
+            column=2,
+            padx=0,
+            pady=self.params["padding"],
+            ipady=self.params["ipady"] + 1,
+        )
+
+        auto_button = ttk.Button(
+            self,
+            text="Auto Mode",
+            width=self.params["width"] - pages_entry_box_width - 1,
+            style="my.TButton",
+            command=self.auto_button_clicked,
+        )
+        auto_button.grid(
+            row=1,
+            column=1,
+            padx=self.params["padding"],
+            pady=self.params["padding"],
+            ipady=self.params["ipady"],
+        )
+
+        create_pdf_button = ttk.Button(
+            self,
+            text="Create pdf",
+            width=self.params["width"],
+            style="my.TButton",
+            command=self.create_pdf_button_clicked,
+        )
+        create_pdf_button.grid(
+            row=2,
+            column=1,
+            columnspan=2,
+            padx=self.params["padding"],
+            pady=self.params["padding"],
+            ipady=self.params["ipady"],
+        )
 
     # This is unused, should we remove it?
     # @property
@@ -160,7 +196,7 @@ class MainWindow(tk.Tk):
             self.deiconify()
         if self.show_image:
             image.show()
-        image.save(f"{self.IMG_DIR}/image{self.image_no}.png")
+        image.save(f"{self.img_dir}/image{self.image_no}.png")
         self.image_no += 1
         print(self.image_no)
 
@@ -168,25 +204,37 @@ class MainWindow(tk.Tk):
         """This will "auto click the capture button" (or, rather, call its function) for a
         \rgiven amount of times. That amount is written in the entry box."""
         self.show_image = False
-        # This breaks auto capture, the 5 second delay is to allow the user to get focus on the intended app / site
-        # to advance through pages e.g. Box.com
+        # This breaks auto capture, the 5 second delay is to allow the user to get focus on the
+        # intended app / site to advance through pages e.g. Box.com
         # messagebox.showinfo(
         #    title="Attention",
         #    message="Press enter to start capturing the screen.",
         #    parent=self
         # )
+
+        new_window = top_levels.AutoWindow(self)
+        if not new_window.pressed_ok:
+            return
+
+        button = new_window.button_selected.get()
+        print(button)
+
         print("Starting auto capture in 5 seconds")
         self.auto_hide = False
         time.sleep(5)
         for _ in range(self.pages.get()):
             self.capture_button_clicked()
-            pyautogui.press("down")
+            pyautogui.press(button)
             print(f"Captured image {self.image_no}")
 
+        messagebox.showinfo(
+            title="Success", message="Finished capturing screen.", parent=self
+        )
+
     def create_pdf_button_clicked(self):
-        """This function will concatenate all images in the IMG_DIR folder into a PDF."""
+        """This function will concatenate all images in the img_dir folder into a PDF."""
         print("Getting list of images from img folder")
-        images_list = os.listdir(self.IMG_DIR)
+        images_list = os.listdir(self.img_dir)
         print(images_list)
         pdf = FPDF(
             "l", "pt", "A4"
@@ -194,13 +242,13 @@ class MainWindow(tk.Tk):
         pdf.set_auto_page_break(True)
         pdf.set_margins(0, 0)
         for img in images_list:
-            timage = Image.open(f"{self.IMG_DIR}/{img}")
+            timage = Image.open(f"{self.img_dir}/{img}")
             print(timage.width, timage.height)
             # Below will add a page the same size as the image.
             pdf.add_page(format=(timage.height, timage.width))
             # format keyword gives out an error if using fpdf, fpdf2 is required
             # pip uninstall fpdf, pip install fpdf2
-            pdf.image(f"{self.IMG_DIR}/{img}")
+            pdf.image(f"{self.img_dir}/{img}")
         pdf.output("Binder.pdf")
         messagebox.showinfo(
             title="Success", message="Finished creating PDF.", parent=self
