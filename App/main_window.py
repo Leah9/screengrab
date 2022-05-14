@@ -7,6 +7,7 @@ from tkinter import messagebox
 import pyautogui
 from PIL import Image
 from fpdf import FPDF
+from . import top_levels
 
 
 class MainWindow(tk.Tk):
@@ -168,19 +169,27 @@ class MainWindow(tk.Tk):
         """This will "auto click the capture button" (or, rather, call its function) for a
         \rgiven amount of times. That amount is written in the entry box."""
         self.show_image = False
-        # This breaks auto capture, the 5 second delay is to allow the user to get focus on the intended app / site
-        # to advance through pages e.g. Box.com
+        # This breaks auto capture, the 5 second delay is to allow the user to get focus on the
+        # intended app / site to advance through pages e.g. Box.com
         # messagebox.showinfo(
         #    title="Attention",
         #    message="Press enter to start capturing the screen.",
         #    parent=self
         # )
+
+        new_window = top_levels.AutoWindow(self)
+        if not new_window.pressed_ok:
+            return
+
+        button = new_window.button_selected.get()
+        print(button)
+
         print("Starting auto capture in 5 seconds")
         self.auto_hide = False
         time.sleep(5)
         for _ in range(self.pages.get()):
             self.capture_button_clicked()
-            pyautogui.press("down")
+            pyautogui.press(button)
             print(f"Captured image {self.image_no}")
 
     def create_pdf_button_clicked(self):
