@@ -15,6 +15,7 @@ class MainWindow(tk.Tk):
 
     def __init__(self, x1=0, y1=0, x2=640, y2=480):  # Use sensible defaults
         super().__init__()
+        self.title("ScreenGrab")
         self.x1 = x1
         self.y1 = y1
         self.x2 = x2
@@ -24,12 +25,18 @@ class MainWindow(tk.Tk):
         self.pages = tk.IntVar()
         self.pages.set(5)
         self.params = {
-            "width": 17,
+            "width": 16,
             "pady": 8,
+            "ipady": 12,
             "padding": 2,
             "borderwidth": 3,
             "button_bg": "#DEDEDE",
         }
+
+        self.style = ttk.Style()
+        self.style.theme_use("vista")
+        self.style.configure("my.TButton", font="helvetica  12")
+
         self._draw_screen()
         self.img_dir = "img"
         self.auto_hide = True
@@ -45,16 +52,14 @@ class MainWindow(tk.Tk):
         self.attributes("-topmost", True)  # Keeps GUI on top
         self.config(padx=35, pady=35)
         # Place a label on the root window
-        message = ttk.Label(self, text="ScreenGrab")
-        message.grid(row=0, column=0, columnspan=3, pady=2)
+        message = ttk.Label(self, text="ScreenGrab", font="arial 15")
+        message.grid(row=0, column=0, columnspan=3, pady=15)
 
         get_box_button = ttk.Button(
             self,
             text="Get Box",
-            # borderwidth=self.params["borderwidth"],
-            # bg=self.params["button_bg"],
             width=self.params["width"],
-            # pady=self.params["pady"],
+            style="my.TButton",
             command=self.get_box_button_clicked,
         )
         get_box_button.grid(
@@ -62,17 +67,15 @@ class MainWindow(tk.Tk):
             column=0,
             padx=self.params["padding"],
             pady=self.params["padding"],
-            ipady=self.params["pady"],
+            ipady=self.params["ipady"],
         )
 
         # Define the buttons
         capture_button = ttk.Button(
             self,
             text="Capture",
-            # borderwidth=self.params["borderwidth"],
-            # bg=self.params["button_bg"],
             width=self.params["width"],
-            # pady=self.params["pady"],
+            style="my.TButton",
             command=self.capture_button_clicked,
         )
         capture_button.grid(
@@ -80,33 +83,31 @@ class MainWindow(tk.Tk):
             column=0,
             padx=self.params["padding"],
             pady=self.params["padding"],
-            ipady=self.params["pady"],
+            ipady=self.params["ipady"],
         )
 
         # Text box for number of pages
-        pages_entry_box_with = 5
+        pages_entry_box_width = 4
         pages_entry_box = ttk.Entry(
             self,
             justify=tk.CENTER,
-            # borderwidth=self.params["borderwidth"],
-            width=pages_entry_box_with,
+            width=pages_entry_box_width,
+            font="helvetica  12",
             textvariable=self.pages,
         )
         pages_entry_box.grid(
             row=1,
             column=2,
-            padx=self.params["padding"],
+            padx=0,
             pady=self.params["padding"],
-            ipady=self.params["pady"],
+            ipady=self.params["ipady"] + 1,
         )
 
         auto_button = ttk.Button(
             self,
             text="Auto Mode",
-            # borderwidth=self.params["borderwidth"],
-            # bg=self.params["button_bg"],
-            width=self.params["width"] - pages_entry_box_with - 1,
-            # pady=self.params["pady"],
+            width=self.params["width"] - pages_entry_box_width - 1,
+            style="my.TButton",
             command=self.auto_button_clicked,
         )
         auto_button.grid(
@@ -114,16 +115,14 @@ class MainWindow(tk.Tk):
             column=1,
             padx=self.params["padding"],
             pady=self.params["padding"],
-            ipady=self.params["pady"],
+            ipady=self.params["ipady"],
         )
 
         create_pdf_button = ttk.Button(
             self,
             text="Create pdf",
-            # borderwidth=self.params["borderwidth"],
-            # bg=self.params["button_bg"],
             width=self.params["width"],
-            # pady=self.params["pady"],
+            style="my.TButton",
             command=self.create_pdf_button_clicked,
         )
         create_pdf_button.grid(
@@ -132,7 +131,7 @@ class MainWindow(tk.Tk):
             columnspan=2,
             padx=self.params["padding"],
             pady=self.params["padding"],
-            ipady=self.params["pady"],
+            ipady=self.params["ipady"],
         )
 
     # This is unused, should we remove it?
@@ -227,6 +226,10 @@ class MainWindow(tk.Tk):
             self.capture_button_clicked()
             pyautogui.press(button)
             print(f"Captured image {self.image_no}")
+
+        messagebox.showinfo(
+            title="Success", message="Finished capturing screen.", parent=self
+        )
 
     def create_pdf_button_clicked(self):
         """This function will concatenate all images in the img_dir folder into a PDF."""

@@ -11,11 +11,9 @@ class AutoWindow(tk.Toplevel):
 
     def __init__(self, parent):
         super().__init__(parent)
+        self.title("Auto Mode")
         self.parent = parent
         self.pressed_ok = False
-        self.style = ttk.Style()
-        self.style.configure("my.TCombobox", selectbackground="white")
-        self.style.theme_use("vista")
         self.button_selected = tk.StringVar(master=self, value="Down")
         self.buttons_available = ["Down", "Up", "PageDown", "PageUp", "Enter"]
         self.inputs = {}
@@ -26,7 +24,6 @@ class AutoWindow(tk.Toplevel):
 
         x_offset = parent.x_offset + (parent.winfo_width() / 3)
         y_offset = parent.y_offset + (parent.winfo_height() / 3)
-        print(parent.x_offset, parent.y_offset, x_offset, y_offset)
         self.geometry(f"+{int(x_offset)}+{int(y_offset)}")
 
         self.grab_set()
@@ -40,24 +37,23 @@ class AutoWindow(tk.Toplevel):
             state="readonly",
             values=self.buttons_available,
             justify="center",
-            width=self.parent.params["width"] - 3,
-            style="my.TCombobox",
+            width=self.parent.params["width"] - 1,
         )
-        self.inputs["OpMenu"].pack(pady=10, ipady=5)
+        self.inputs["OpMenu"].pack(pady=4, ipady=8)
         self.inputs["OpMenu"].bind(
-            "<<ComboboxSelected>>", lambda e: self.inputs["OkBTN"].focus()
+            "<<ComboboxSelected>>", lambda e: self.inputs["OkBTN"].focus_force()
         )
 
         self.inputs["OkBTN"] = ttk.Button(
             master=self,
-            text="Ok",
-            # style="my.TButton",
-            padding=(0, 10, 0, 10),
-            width=self.parent.params["width"],
+            text="OK",
+            style="my.TButton",
+            padding=(0, 11, 0, 11),
+            width=self.parent.params["width"] - 2,
             command=self.close_window,
         )
 
-        self.inputs["OkBTN"].pack(pady=10)
+        self.inputs["OkBTN"].pack(pady=4)
 
     def close_window(self):
         """When the user presses ok on this window this function will be called.
