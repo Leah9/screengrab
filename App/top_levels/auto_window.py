@@ -20,10 +20,14 @@ class AutoWindow(tk.Toplevel):
         self.buttons_available = ["Down", "Up", "PageDown", "PageUp", "Enter"]
         self.inputs = {}
 
-        self.config(padx=25, pady=25)
+        self.config(padx=55, pady=25)
         self.attributes("-topmost", True)
-
         self._draw_window()
+
+        x_offset = parent.x_offset + (parent.winfo_width() / 3)
+        y_offset = parent.y_offset + (parent.winfo_height() / 3)
+        print(parent.x_offset, parent.y_offset, x_offset, y_offset)
+        self.geometry(f"+{int(x_offset)}+{int(y_offset)}")
 
         self.grab_set()
         # "parent.wait_window" needs to be the last thing this GUI calls when constructing itself.
@@ -36,10 +40,10 @@ class AutoWindow(tk.Toplevel):
             state="readonly",
             values=self.buttons_available,
             justify="center",
-            width=self.parent.default_params["width"] - 3,
+            width=self.parent.params["width"] - 3,
             style="my.TCombobox",
         )
-        self.inputs["OpMenu"].pack(pady=10)
+        self.inputs["OpMenu"].pack(pady=10, ipady=5)
         self.inputs["OpMenu"].bind(
             "<<ComboboxSelected>>", lambda e: self.inputs["OkBTN"].focus()
         )
@@ -49,7 +53,7 @@ class AutoWindow(tk.Toplevel):
             text="Ok",
             # style="my.TButton",
             padding=(0, 10, 0, 10),
-            width=self.parent.default_params["width"],
+            width=self.parent.params["width"],
             command=self.close_window,
         )
 
