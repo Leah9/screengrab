@@ -22,9 +22,18 @@ class AutoWindow(tk.Toplevel):
         self.attributes("-topmost", True)
         self._draw_window()
 
-        x_offset = parent.x_offset + (parent.winfo_width() / 3)
-        y_offset = parent.y_offset + (parent.winfo_height() / 3)
-        self.geometry(f"+{int(x_offset)}+{int(y_offset)}")
+        x_offset = self.parent.winfo_rootx() + self.parent.winfo_width() // 2
+        y_offset = self.parent.winfo_rooty() + self.parent.winfo_height() // 2 - 30
+        self.withdraw()
+        self.update()
+        self.geometry(
+            "+%d+%d"
+            % (
+                x_offset - self.winfo_width() // 2,
+                y_offset - self.winfo_height() // 2,
+            )
+        )
+        self.deiconify()
 
         self.grab_set()
         # "parent.wait_window" needs to be the last thing this GUI calls when constructing itself.
