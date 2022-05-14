@@ -9,9 +9,8 @@ from PIL import Image
 from fpdf import FPDF
 
 
-# Define the App class
 class MainWindow(tk.Tk):
-    """Main window"""
+    """Main window of the App."""
 
     def __init__(self, x1=0, y1=0, x2=640, y2=480):  # Use sensible defaults
         super().__init__()
@@ -19,9 +18,6 @@ class MainWindow(tk.Tk):
         self.y1 = y1
         self.x2 = x2
         self.y2 = y2
-        # The below does not work
-        # self.box = (x1, y1, x2, y2)
-        # self.region = (self.x1, self.y1, self.x2 - self.x1, self.y2 - self.y1)
         self.image_no = 1001
         self.show_image = False
         self.pages = tk.IntVar()
@@ -97,23 +93,20 @@ class MainWindow(tk.Tk):
             textvariable=self.pages)
         pages_entry_box.pack(pady=2)
 
-    @property
-    def number(self):
-        """Top left x is returned as an integer"""
-        return int(self.box[0])
+    # This is unused, should we remove it?
+    # @property
+    # def number(self):
+    #     """Top left x is returned as an integer"""
+    #     return int(self.box[0])
 
-    #@property
+    @property
     def region(self):
         """Property that returns a region."""
         return (self.x1, self.y1, self.x2 - self.x1, self.y2 - self.y1)
 
-    # @property
-    # def box(self):  # Returns the box dimensions in the correct format
-    #     return self.x1, self.y1, self.x2, self.y2
-
-    # Function is called when the Get Box button is clicked
     def get_box_button_clicked(self):
-        """This function will capture two points on the screen to create a bounding box."""
+        """This function will capture two points on the screen to create a bounding box.
+        \rIt's called when the Get Box button is clicked"""
         messagebox.showinfo(
             title="Attention: TOP LEFT",
             message="Position your mouse and press enter to capture TOP LEFT position.",
@@ -139,27 +132,25 @@ class MainWindow(tk.Tk):
         # update the values in the object
         self.x1, self.y1 = x1y1
         self.x2, self.y2 = x2y2
-        print(self.region())
-        messagebox.showinfo(title="Finished", message=f"Captured area was {self.region()}", parent=self)
+        print(self.region)
+        messagebox.showinfo(title="Finished", message=f"Captured area was {self.region}", parent=self)
 
         # print("Captured area")
-        # print(self.box)
         # print(pyautogui.position())
 
-    # Called when the Capture button is clicked
     def capture_button_clicked(self):
-        """This will capture an screen shot of the bounding box area when called."""
+        """This will capture an screen shot of the bounding box area when called.
+        \rIts main use is when the Capture button is clicked."""
         print('Button clicked')
         # Hide GUI while capture takes place only if auto hide is True
         if self.auto_hide:
             self.withdraw()
             # Without the delay we capture a faded area of the GUI 0.2 seems to be the lowest delay
             time.sleep(0.2)
-        image = pyautogui.screenshot(region=self.region())
+        image = pyautogui.screenshot(region=self.region)
         # Show GUI when capture has taken place
         if self.auto_hide:
-            self.deiconify()
-        # image = pyscreenshot.grab(bbox=(self.box))
+            self.deiconify()        
         if self.show_image:
             image.show()
         image.save(f"{self.IMG_DIR}/image{self.image_no}.png")
