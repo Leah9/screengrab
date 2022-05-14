@@ -3,7 +3,7 @@
 import os
 import time
 import tkinter as tk
-from tkinter import messagebox, ttk
+from tkinter import messagebox, ttk, Checkbutton
 import pyautogui
 from PIL import Image
 from fpdf import FPDF
@@ -24,6 +24,7 @@ class MainWindow(tk.Tk):
         self.show_image = False
         self.pages = tk.IntVar()
         self.pages.set(5)
+        self.auto_hide = True
         self.params = {
             "width": 16,
             "pady": 8,
@@ -39,7 +40,7 @@ class MainWindow(tk.Tk):
 
         self._draw_screen()
         self.img_dir = "img"
-        self.auto_hide = True
+
 
         self.x_offset = int(0.05 * self.winfo_screenwidth())
         self.y_offset = int(0.15 * self.winfo_screenheight())
@@ -118,6 +119,21 @@ class MainWindow(tk.Tk):
             ipady=self.params["ipady"],
         )
 
+        auto_hide_checkbox = tk.Checkbutton(
+            self,
+            text="Auto hide",
+            variable=self.auto_hide,
+            onvalue=True, offvalue=False,
+        )
+        #auto_hide_checkbox.setvar(0)
+        auto_hide_checkbox.grid(
+            row=3,
+            column=1,
+            padx=self.params["padding"],
+            pady=self.params["padding"],
+            ipady=self.params["ipady"],
+        )
+
         create_pdf_button = ttk.Button(
             self,
             text="Create pdf",
@@ -134,11 +150,6 @@ class MainWindow(tk.Tk):
             ipady=self.params["ipady"],
         )
 
-    # This is unused, should we remove it?
-    # @property
-    # def number(self):
-    #     """Top left x is returned as an integer"""
-    #     return int(self.box[0])
 
     @property
     def region(self):
@@ -186,6 +197,8 @@ class MainWindow(tk.Tk):
         \rIts main use is when the Capture button is clicked."""
         print("Button clicked")
         # Hide GUI while capture takes place only if auto hide is True
+        print("Auto hide " + str(self.auto_hide))
+        #print("Show image " + str(self.show_image))
         if self.auto_hide:
             self.withdraw()
             # Without the delay we capture a faded area of the GUI 0.2 seems to be the lowest delay
@@ -220,7 +233,7 @@ class MainWindow(tk.Tk):
         print(button)
 
         print("Starting auto capture in 5 seconds")
-        self.auto_hide = False
+        #self.auto_hide = False
         time.sleep(5)
         for _ in range(self.pages.get()):
             self.capture_button_clicked()
