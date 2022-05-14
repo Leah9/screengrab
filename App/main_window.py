@@ -36,7 +36,7 @@ class MainWindow(tk.Tk):
         """This function is inteded to be called when constructing this class (in __init__).
         \rThis is where all the main widgets are supposed to be packed."""
 
-        self.attributes('-topmost', True)  # Keeps GUI on top
+        self.attributes("-topmost", True)  # Keeps GUI on top
         self.config(padx=20, pady=20)
         # Place a label on the root window
         message = tk.Label(self, text="ScreenGrab")
@@ -45,43 +45,47 @@ class MainWindow(tk.Tk):
         # Define the buttons
         capture_button = tk.Button(
             self,
-            text='Capture',
+            text="Capture",
             borderwidth=self.default_params["borderwidth"],
             bg=self.default_params["button_bg"],
             width=self.default_params["width"],
             pady=self.default_params["pady"],
-            command=self.capture_button_clicked
+            command=self.capture_button_clicked,
         )
         # Pack the button, required.
         capture_button.pack(pady=2)
 
         get_box_button = tk.Button(
             self,
-            text='Get Box', borderwidth=self.default_params["borderwidth"],
+            text="Get Box",
+            borderwidth=self.default_params["borderwidth"],
             bg=self.default_params["button_bg"],
             width=self.default_params["width"],
             pady=self.default_params["pady"],
-            command=self.get_box_button_clicked)
+            command=self.get_box_button_clicked,
+        )
         get_box_button.pack(pady=2)
 
         auto_button = tk.Button(
             self,
-            text='Auto mode, down arrow',
+            text="Auto mode, down arrow",
             borderwidth=self.default_params["borderwidth"],
             bg=self.default_params["button_bg"],
             width=self.default_params["width"],
             pady=self.default_params["pady"],
-            command=self.auto_button_clicked)
+            command=self.auto_button_clicked,
+        )
         auto_button.pack(pady=2)
 
         create_pdf_button = tk.Button(
             self,
-            text='Create pdf',
+            text="Create pdf",
             borderwidth=self.default_params["borderwidth"],
             bg=self.default_params["button_bg"],
             width=self.default_params["width"],
             pady=self.default_params["pady"],
-            command=self.create_pdf_button_clicked)
+            command=self.create_pdf_button_clicked,
+        )
         create_pdf_button.pack(pady=2)
 
         # Text box for number of pages
@@ -90,7 +94,8 @@ class MainWindow(tk.Tk):
             justify=tk.CENTER,
             borderwidth=self.default_params["borderwidth"],
             width=self.default_params["width"],
-            textvariable=self.pages)
+            textvariable=self.pages,
+        )
         pages_entry_box.pack(pady=2)
 
     # This is unused, should we remove it?
@@ -111,7 +116,7 @@ class MainWindow(tk.Tk):
             title="Attention: TOP LEFT",
             message="Position your mouse and press enter to capture TOP LEFT position.",
             icon="question",  # This specific icon removes the bell noise from the messagebox.
-            parent=self
+            parent=self,
         )
         # print("Top left position in 5 seconds")
         # time.sleep(5)
@@ -123,7 +128,7 @@ class MainWindow(tk.Tk):
             title="Attention: BOTTOM RIGHT",
             message="Position your mouse and press enter to capture BOTTOM RIGHT position",
             icon="question",
-            parent=self
+            parent=self,
         )
         # print("Capturing bottom right in 5 seconds")
         # time.sleep(5)
@@ -133,7 +138,9 @@ class MainWindow(tk.Tk):
         self.x1, self.y1 = x1y1
         self.x2, self.y2 = x2y2
         print(self.region)
-        messagebox.showinfo(title="Finished", message=f"Captured area was {self.region}", parent=self)
+        messagebox.showinfo(
+            title="Finished", message=f"Captured area was {self.region}", parent=self
+        )
 
         # print("Captured area")
         # print(pyautogui.position())
@@ -141,7 +148,7 @@ class MainWindow(tk.Tk):
     def capture_button_clicked(self):
         """This will capture an screen shot of the bounding box area when called.
         \rIts main use is when the Capture button is clicked."""
-        print('Button clicked')
+        print("Button clicked")
         # Hide GUI while capture takes place only if auto hide is True
         if self.auto_hide:
             self.withdraw()
@@ -150,7 +157,7 @@ class MainWindow(tk.Tk):
         image = pyautogui.screenshot(region=self.region)
         # Show GUI when capture has taken place
         if self.auto_hide:
-            self.deiconify()        
+            self.deiconify()
         if self.show_image:
             image.show()
         image.save(f"{self.IMG_DIR}/image{self.image_no}.png")
@@ -173,7 +180,7 @@ class MainWindow(tk.Tk):
         time.sleep(5)
         for _ in range(self.pages.get()):
             self.capture_button_clicked()
-            pyautogui.press('down')
+            pyautogui.press("down")
             print(f"Captured image {self.image_no}")
 
     def create_pdf_button_clicked(self):
@@ -181,7 +188,9 @@ class MainWindow(tk.Tk):
         print("Getting list of images from img folder")
         images_list = os.listdir(self.IMG_DIR)
         print(images_list)
-        pdf = FPDF('l', 'pt', 'A4')  # Init pdf l = landscape, pt = points / pixels, A4 default size
+        pdf = FPDF(
+            "l", "pt", "A4"
+        )  # Init pdf l = landscape, pt = points / pixels, A4 default size
         pdf.set_auto_page_break(True)
         pdf.set_margins(0, 0)
         for img in images_list:
@@ -193,4 +202,6 @@ class MainWindow(tk.Tk):
             # pip uninstall fpdf, pip install fpdf2
             pdf.image(f"{self.IMG_DIR}/{img}")
         pdf.output("Binder.pdf")
-        messagebox.showinfo(title="Success", message="Finished creating PDF.", parent=self)
+        messagebox.showinfo(
+            title="Success", message="Finished creating PDF.", parent=self
+        )
