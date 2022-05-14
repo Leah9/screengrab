@@ -13,7 +13,7 @@ def main():
     # Checking if directory exists.
 
     # Init Tkinter call our GUI root
-    root = App.MainWindow(408, 146, 1683, 1037)
+    root = App.MainWindow(0, 0, 1920, 1080)
 
     if not os.path.exists(root.IMG_DIR):
         # Creates it in case it doesn't

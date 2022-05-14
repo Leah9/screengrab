@@ -5,6 +5,19 @@ FPDF2 is required in order to create a pdf with the correct dimensions.
 To remove the older version if present run : pip uninstall fpdf
 To install the new version pip install fpdf2
 
+Required libraries
+* FPDF2
+* pyautogui
+* tkinter
+
+# Testing functionality
+## Please carry out the following to check the main functionality of the code.
+* The app needs to be able to capture a user selected area of the screen.
+* It needs to process all images into a pdf
+* Navigate here https://app.box.com/s/xtt0vzw90ocmhajgtp2sxo387kqy5ibn and use auto mode to capture the 3 pages and combine in to a pdf.
+* The above is easier in Edge full screen mode F11, zoom in / out to fit the page to the screen.
+
+
 ## Intended Purpose
 To grab a user defined area of the screen repeatedly and save images for later processing.
 
