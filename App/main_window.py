@@ -36,7 +36,9 @@ class MainWindow(tk.Tk):
         }
         self.widgets = {}
         self.style = ttk.Style()
-        self.style.theme_use("vista")
+        # Checks for OS type, "Vista theme does not work on Linux"
+        if os.name == 'nt':
+            self.style.theme_use("vista")
         self.style.configure("my.TButton", font=self.font)
 
         self._draw_screen()
