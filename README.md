@@ -1,4 +1,4 @@
-# Screen Grab
+# Screen Grab [![Windows Tests](https://github.com/ArielMAJ/screengrab/actions/workflows/windows-tests.yml/badge.svg)](https://github.com/ArielMAJ/screengrab/actions/workflows/windows-tests.yml)
 
 ## Important notes
 FPDF2 is required in order to create a pdf with the correct dimensions.
@@ -34,7 +34,7 @@ The generated pdf can be OCR'd using the following :
 ocrmypdf https://ocrmypdf.readthedocs.io/en/latest/index.html
 It is not a casual installation but it is very quick once it is working.
 
-## Compatability
+## Compatibility
 * Windows, works and is the primary development platform.
 * Linux / Ubuntu, testing in progress. Currently not working.
  sudo apt install python3-pip
