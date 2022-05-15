@@ -25,7 +25,7 @@ class MainWindow(tk.Tk):
         self.pages = tk.IntVar(master=self, value=5)
         self.auto_hide = tk.BooleanVar(master=self, value=False)
         self.params = {
-            "width": 16,
+            "width": 11,
             "pady": 8,
             "ipady": 12,
             "padding": 2,
@@ -49,10 +49,10 @@ class MainWindow(tk.Tk):
         \rThis is where all the main widgets are supposed to be packed."""
 
         self.attributes("-topmost", True)  # Keeps GUI on top
-        self.config(padx=35, pady=35)
+        self.config(padx=30, pady=15)
         # Place a label on the root window
-        message = ttk.Label(self, text="ScreenGrab", font="arial 15")
-        message.grid(row=0, column=0, columnspan=3, pady=15)
+        message = tk.Label(self, text="ScreenGrab", justify="right", font="arial 15")
+        message.grid(row=0, column=0, columnspan=3, pady=15, sticky="NEWS")
 
         get_box_button = ttk.Button(
             self,
@@ -67,6 +67,7 @@ class MainWindow(tk.Tk):
             padx=self.params["padding"],
             pady=self.params["padding"],
             ipady=self.params["ipady"],
+            sticky='NEWS',
         )
 
         # Define the buttons
@@ -83,15 +84,16 @@ class MainWindow(tk.Tk):
             padx=self.params["padding"],
             pady=self.params["padding"],
             ipady=self.params["ipady"],
+            sticky='NEWS',
         )
 
         # Text box for number of pages
-        pages_entry_box_width = 4
+        pages_entry_box_width = 1
         pages_entry_box = ttk.Entry(
             self,
             justify=tk.CENTER,
             width=pages_entry_box_width,
-            font="helvetica  12",
+            font="helvetica  13",
             textvariable=self.pages,
         )
         pages_entry_box.grid(
@@ -100,6 +102,7 @@ class MainWindow(tk.Tk):
             padx=0,
             pady=self.params["padding"],
             ipady=self.params["ipady"] + 1,
+            sticky='NEWS',
         )
 
         auto_button = ttk.Button(
@@ -115,6 +118,7 @@ class MainWindow(tk.Tk):
             padx=self.params["padding"],
             pady=self.params["padding"],
             ipady=self.params["ipady"],
+            sticky='NEWS',
         )
 
         create_pdf_button = ttk.Button(
@@ -131,6 +135,7 @@ class MainWindow(tk.Tk):
             padx=self.params["padding"],
             pady=self.params["padding"],
             ipady=self.params["ipady"],
+            sticky='NEWS',
         )
 
         # Green
@@ -145,6 +150,14 @@ class MainWindow(tk.Tk):
         # This is the box format that's gonna be drawn with the given the color in relation
         # to the PhotoImage.
 
+        message = tk.Label(
+            self,
+            text="Auto Hide:\n{}".format("ON" if self.auto_hide.get() else "OFF"),
+            justify="center",
+            font="arial 12",
+        )
+        message.grid(row=3, column=1)
+
         self.widgets["auto_hide_switch"] = tk.Checkbutton(
             self,
             image=self.showing_gui,
@@ -155,6 +168,9 @@ class MainWindow(tk.Tk):
             offvalue=False,
             variable=self.auto_hide,
             offrelief="sunken",
+            command=lambda: message.config(
+                text="Auto Hide:\n{}".format("ON" if self.auto_hide.get() else "OFF")
+            ),
         )
         self.widgets["auto_hide_switch"].grid(row=3, column=2, pady=self.params["pady"])
         self.widgets["auto_hide_switch"].bind(
@@ -249,6 +265,7 @@ class MainWindow(tk.Tk):
         time.sleep(5)
         if self.auto_hide.get():
             self.withdraw()
+            time.sleep(0.1)
         for _ in range(self.pages.get()):
             self.capture_button_clicked(control_hiding_state=False)
             pyautogui.press(button)
