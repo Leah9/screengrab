@@ -33,3 +33,8 @@ I have looked at doing this and the current conclusion is that it is too complex
 The generated pdf can be OCR'd using the following :
 ocrmypdf https://ocrmypdf.readthedocs.io/en/latest/index.html
 It is not a casual installation but it is very quick once it is working.
+
+## Compatability
+* Windows, works and is the primary development platform.
+* Linux / Ubuntu, testing in progress.
+* Mac, developers / testers needed.
