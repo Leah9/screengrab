@@ -12,8 +12,10 @@ import App
 
 
 def capture_size_full_screen():
-    """This will assert capture_button_clicked captures images of the
-    \rcorrect expected size: (1920, 1080)"""
+    """
+    This will assert capture_button_clicked captures images of the
+    correct expected size: (1920, 1080)
+    """
     root = App.MainWindow(0, 0, 1920, 1080)
     root.capture_button_clicked()
     root.capture_button_clicked()
@@ -35,8 +37,10 @@ def capture_size_full_screen():
 
 
 def capture_size_small_box():
-    """This will assert capture_button_clicked captures images of the
-    \rcorrect expected size: (200, 200)."""
+    """
+    This will assert capture_button_clicked captures images of the
+    correct expected size: (200, 200).
+    """
     root = App.MainWindow(200, 200, 400, 400)
     root.capture_button_clicked()
     root.capture_button_clicked()
