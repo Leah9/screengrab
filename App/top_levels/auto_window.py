@@ -18,7 +18,7 @@ class AutoWindow(tk.Toplevel):
         self.buttons_available = ["Down", "Up", "PageDown", "PageUp", "Enter"]
         self.inputs = {}
 
-        self.config(padx=55, pady=25)
+        self.config(padx=60, pady=35)
         self.attributes("-topmost", True)
         self._draw_window()
 
@@ -46,11 +46,12 @@ class AutoWindow(tk.Toplevel):
             state="readonly",
             values=self.buttons_available,
             justify="center",
-            width=self.parent.params["width"] - 1,
+            font=self.parent.font,
+            width=3 * self.parent.params["width"] // 2 - 1,
         )
-        self.inputs["OpMenu"].pack(pady=4, ipady=8)
+        self.inputs["OpMenu"].pack(pady=4, ipady=8, fill=tk.BOTH)
         self.inputs["OpMenu"].bind(
-            "<<ComboboxSelected>>", lambda e: self.inputs["OkBTN"].focus_force()
+            "<<ComboboxSelected>>", lambda event: self.inputs["OkBTN"].focus_force()
         )
 
         self.inputs["OkBTN"] = ttk.Button(
@@ -58,11 +59,11 @@ class AutoWindow(tk.Toplevel):
             text="OK",
             style="my.TButton",
             padding=(0, 11, 0, 11),
-            width=self.parent.params["width"] - 2,
+            width=3 * self.parent.params["width"] // 2 - 2,
             command=self.close_window,
         )
 
-        self.inputs["OkBTN"].pack(pady=4)
+        self.inputs["OkBTN"].pack(pady=4, fill=tk.BOTH)
 
     def close_window(self):
         """When the user presses ok on this window this function will be called.

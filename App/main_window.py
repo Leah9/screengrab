@@ -20,10 +20,12 @@ class MainWindow(tk.Tk):
         self.y1 = y1
         self.x2 = x2
         self.y2 = y2
+        self.font = "helvetica 12"
+        self.option_add("*TCombobox*Listbox.font", self.font)
         self.image_no = 1001
         self.show_image = False
         self.pages = tk.IntVar(master=self, value=5)
-        self.auto_hide = tk.BooleanVar(master=self, value=False)
+        self.auto_hide = tk.BooleanVar(master=self, value=True)
         self.params = {
             "width": 11,
             "pady": 8,
@@ -35,7 +37,7 @@ class MainWindow(tk.Tk):
         self.widgets = {}
         self.style = ttk.Style()
         self.style.theme_use("vista")
-        self.style.configure("my.TButton", font="helvetica  12")
+        self.style.configure("my.TButton", font=self.font)
 
         self._draw_screen()
         self.img_dir = "img"
@@ -52,7 +54,7 @@ class MainWindow(tk.Tk):
         self.config(padx=30, pady=15)
         # Place a label on the root window
         message = tk.Label(self, text="ScreenGrab", justify="right", font="arial 15")
-        message.grid(row=0, column=0, columnspan=3, pady=15, sticky="NEWS")
+        message.grid(row=0, column=0, columnspan=3, pady=10, sticky="NEWS")
 
         get_box_button = ttk.Button(
             self,
@@ -67,7 +69,7 @@ class MainWindow(tk.Tk):
             padx=self.params["padding"],
             pady=self.params["padding"],
             ipady=self.params["ipady"],
-            sticky='NEWS',
+            sticky="NEWS",
         )
 
         # Define the buttons
@@ -84,7 +86,7 @@ class MainWindow(tk.Tk):
             padx=self.params["padding"],
             pady=self.params["padding"],
             ipady=self.params["ipady"],
-            sticky='NEWS',
+            sticky="NEWS",
         )
 
         # Text box for number of pages
@@ -93,16 +95,15 @@ class MainWindow(tk.Tk):
             self,
             justify=tk.CENTER,
             width=pages_entry_box_width,
-            font="helvetica  13",
+            font=self.font,
             textvariable=self.pages,
         )
         pages_entry_box.grid(
             row=1,
             column=2,
-            padx=0,
-            pady=self.params["padding"],
-            ipady=self.params["ipady"] + 1,
-            sticky='NEWS',
+            padx=(0, 2),
+            pady=self.params["padding"] + 1,
+            sticky="NEWS",
         )
 
         auto_button = ttk.Button(
@@ -118,12 +119,13 @@ class MainWindow(tk.Tk):
             padx=self.params["padding"],
             pady=self.params["padding"],
             ipady=self.params["ipady"],
-            sticky='NEWS',
+            ipadx=2,
+            sticky="NEWS",
         )
 
         create_pdf_button = ttk.Button(
             self,
-            text="Create pdf",
+            text="Create PDF",
             width=self.params["width"],
             style="my.TButton",
             command=self.create_pdf_button_clicked,
@@ -135,7 +137,7 @@ class MainWindow(tk.Tk):
             padx=self.params["padding"],
             pady=self.params["padding"],
             ipady=self.params["ipady"],
-            sticky='NEWS',
+            sticky="NEWS",
         )
 
         # Green
@@ -154,7 +156,7 @@ class MainWindow(tk.Tk):
             self,
             text="Auto Hide:\n{}".format("ON" if self.auto_hide.get() else "OFF"),
             justify="center",
-            font="arial 12",
+            font=self.font,
         )
         message.grid(row=3, column=1)
 
@@ -169,7 +171,7 @@ class MainWindow(tk.Tk):
             variable=self.auto_hide,
             offrelief="sunken",
             command=lambda: message.config(
-                text="Auto Hide:\n{}".format("ON" if self.auto_hide.get() else "OFF")
+                text=f"Auto Hide:\n{'ON' if self.auto_hide.get() else 'OFF'}"
             ),
         )
         self.widgets["auto_hide_switch"].grid(row=3, column=2, pady=self.params["pady"])
@@ -228,7 +230,7 @@ class MainWindow(tk.Tk):
         if self.auto_hide.get() and control_hiding_state:
             self.withdraw()
             # Without the delay we capture a faded area of the GUI 0.2 seems to be the lowest delay
-            time.sleep(0.2)
+            time.sleep(0.25)
             image = pyautogui.screenshot(region=self.region)
             self.deiconify()
         else:
@@ -299,7 +301,9 @@ class MainWindow(tk.Tk):
             title="Success", message="Finished creating PDF.", parent=self
         )
 
-    def switch_hiding_state(self, event):
+    def switch_hiding_state(self, _event=None):
+        """This function switchs the "hiding state" of the window every time it's called
+        \rThis is used to decide whether the main window is gonna hide during auto mode."""
         self.widgets["auto_hide_switch"].configure(
             image=self.showing_gui if self.auto_hide.get() else self.hiding_gui
         )
