@@ -36,5 +36,10 @@ It is not a casual installation but it is very quick once it is working.
 
 ## Compatability
 * Windows, works and is the primary development platform.
-* Linux / Ubuntu, testing in progress.
+* Linux / Ubuntu, testing in progress. Currently not working.
+ sudo apt install python3-pip
+ pip install pyautogui
+ sudo apt-get install python3-tk python3-dev
+ pip install fpdf2
+
 * Mac, developers / testers needed.
