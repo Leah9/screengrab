@@ -10,9 +10,11 @@ py -m tests
 Or whatever way you call python in your machine followed by "-m tests".
 """
 
+import os
 from . import test_main_window as test
 
+if not os.path.exists("img"):
+    os.makedirs("img")
 test.capture_size_full_screen()
 test.capture_size_small_box()
-
 print("PASSED")
