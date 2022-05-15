@@ -3,7 +3,7 @@
 import os
 import time
 import tkinter as tk
-from tkinter import messagebox, ttk, Checkbutton
+from tkinter import messagebox, ttk
 import pyautogui
 from PIL import Image
 from fpdf import FPDF
@@ -22,9 +22,8 @@ class MainWindow(tk.Tk):
         self.y2 = y2
         self.image_no = 1001
         self.show_image = False
-        self.pages = tk.IntVar()
-        self.pages.set(5)
-        self.auto_hide = True
+        self.pages = tk.IntVar(master=self, value=5)
+        self.auto_hide = tk.BooleanVar(master=self, value=False)
         self.params = {
             "width": 16,
             "pady": 8,
@@ -33,14 +32,13 @@ class MainWindow(tk.Tk):
             "borderwidth": 3,
             "button_bg": "#DEDEDE",
         }
-
+        self.widgets = {}
         self.style = ttk.Style()
         self.style.theme_use("vista")
         self.style.configure("my.TButton", font="helvetica  12")
 
         self._draw_screen()
         self.img_dir = "img"
-
 
         self.x_offset = int(0.05 * self.winfo_screenwidth())
         self.y_offset = int(0.15 * self.winfo_screenheight())
@@ -119,21 +117,6 @@ class MainWindow(tk.Tk):
             ipady=self.params["ipady"],
         )
 
-        auto_hide_checkbox = tk.Checkbutton(
-            self,
-            text="Auto hide",
-            variable=self.auto_hide,
-            onvalue=True, offvalue=False,
-        )
-        #auto_hide_checkbox.setvar(0)
-        auto_hide_checkbox.grid(
-            row=3,
-            column=1,
-            padx=self.params["padding"],
-            pady=self.params["padding"],
-            ipady=self.params["ipady"],
-        )
-
         create_pdf_button = ttk.Button(
             self,
             text="Create pdf",
@@ -150,6 +133,33 @@ class MainWindow(tk.Tk):
             ipady=self.params["ipady"],
         )
 
+        # Green
+        self.hiding_gui = tk.PhotoImage(width=51, height=26)
+        self.hiding_gui.put(("#52C788",), to=(0, 0, 24, 24))  # (LEFT, TOP, RIGHT, DOWN)
+        # This is the box format that's gonna be drawn with the given the color in relation
+        # to the PhotoImage.
+
+        # Red
+        self.showing_gui = tk.PhotoImage(width=51, height=26)
+        self.showing_gui.put(("#F33",), to=(25, 0, 49, 24))  # (LEFT, TOP, RIGHT, DOWN)
+        # This is the box format that's gonna be drawn with the given the color in relation
+        # to the PhotoImage.
+
+        self.widgets["auto_hide_switch"] = tk.Checkbutton(
+            self,
+            image=self.showing_gui,
+            selectimage=self.hiding_gui,
+            bg="white",
+            indicatoron=False,
+            onvalue=True,
+            offvalue=False,
+            variable=self.auto_hide,
+            offrelief="sunken",
+        )
+        self.widgets["auto_hide_switch"].grid(row=3, column=2, pady=self.params["pady"])
+        self.widgets["auto_hide_switch"].bind(
+            "<ButtonRelease-1>", self.switch_hiding_state
+        )
 
     @property
     def region(self):
@@ -197,15 +207,15 @@ class MainWindow(tk.Tk):
         \rIts main use is when the Capture button is clicked."""
         print("Button clicked")
         # Hide GUI while capture takes place only if auto hide is True
-        print("Auto hide " + str(self.auto_hide))
-        #print("Show image " + str(self.show_image))
-        if self.auto_hide:
+        print(f"Auto hide {self.auto_hide.get()}")
+        # print("Show image " + str(self.show_image))
+        if self.auto_hide.get():
             self.withdraw()
             # Without the delay we capture a faded area of the GUI 0.2 seems to be the lowest delay
             time.sleep(0.2)
         image = pyautogui.screenshot(region=self.region)
         # Show GUI when capture has taken place
-        if self.auto_hide:
+        if self.auto_hide.get():
             self.deiconify()
         if self.show_image:
             image.show()
@@ -233,7 +243,7 @@ class MainWindow(tk.Tk):
         print(button)
 
         print("Starting auto capture in 5 seconds")
-        #self.auto_hide = False
+        # self.auto_hide.set(False)
         time.sleep(5)
         for _ in range(self.pages.get()):
             self.capture_button_clicked()
@@ -265,4 +275,9 @@ class MainWindow(tk.Tk):
         pdf.output("Binder.pdf")
         messagebox.showinfo(
             title="Success", message="Finished creating PDF.", parent=self
+        )
+
+    def switch_hiding_state(self, event):
+        self.widgets["auto_hide_switch"].configure(
+            image=self.showing_gui if self.auto_hide.get() else self.hiding_gui
         )
