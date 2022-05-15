@@ -202,21 +202,23 @@ class MainWindow(tk.Tk):
         # print("Captured area")
         # print(pyautogui.position())
 
-    def capture_button_clicked(self):
+    def capture_button_clicked(self, control_hiding_state=True):
         """This will capture an screen shot of the bounding box area when called.
         \rIts main use is when the Capture button is clicked."""
         print("Button clicked")
         # Hide GUI while capture takes place only if auto hide is True
         print(f"Auto hide {self.auto_hide.get()}")
         # print("Show image " + str(self.show_image))
-        if self.auto_hide.get():
+        if self.auto_hide.get() and control_hiding_state:
             self.withdraw()
             # Without the delay we capture a faded area of the GUI 0.2 seems to be the lowest delay
             time.sleep(0.2)
-        image = pyautogui.screenshot(region=self.region)
-        # Show GUI when capture has taken place
-        if self.auto_hide.get():
+            image = pyautogui.screenshot(region=self.region)
             self.deiconify()
+        else:
+            time.sleep(0.1)
+            image = pyautogui.screenshot(region=self.region)
+
         if self.show_image:
             image.show()
         image.save(f"{self.img_dir}/image{self.image_no}.png")
@@ -245,11 +247,14 @@ class MainWindow(tk.Tk):
         print("Starting auto capture in 5 seconds")
         # self.auto_hide.set(False)
         time.sleep(5)
+        if self.auto_hide.get():
+            self.withdraw()
         for _ in range(self.pages.get()):
-            self.capture_button_clicked()
+            self.capture_button_clicked(control_hiding_state=False)
             pyautogui.press(button)
             print(f"Captured image {self.image_no}")
-
+        if self.auto_hide.get():
+            self.deiconify()
         messagebox.showinfo(
             title="Success", message="Finished capturing screen.", parent=self
         )
