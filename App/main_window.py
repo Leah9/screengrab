@@ -37,7 +37,7 @@ class MainWindow(tk.Tk):
         self.widgets = {}
         self.style = ttk.Style()
         # Checks for OS type, "Vista theme does not work on Linux"
-        if os.name == 'nt':
+        if os.name == "nt":
             self.style.theme_use("vista")
         self.style.configure("my.TButton", font=self.font)
 
@@ -274,19 +274,21 @@ class MainWindow(tk.Tk):
 
         print("Starting auto capture in 5 seconds")
         # self.auto_hide.set(False)
-        time.sleep(5)
+        # time.sleep(5)
         if self.auto_hide.get():
             self.withdraw()
+        new_window = top_levels.CountdownWindow(self)
+        if not new_window.pressed_cancel:
             time.sleep(0.1)
-        for _ in range(self.pages.get()):
-            self.capture_button_clicked(control_hiding_state=False)
-            pyautogui.press(button)
-            print(f"Captured image {self.image_no}")
+            for _ in range(self.pages.get()):
+                self.capture_button_clicked(control_hiding_state=False)
+                pyautogui.press(button)
+                print(f"Captured image {self.image_no}")
+            messagebox.showinfo(
+                title="Success", message="Finished capturing screen.", parent=self
+            )
         if self.auto_hide.get():
             self.deiconify()
-        messagebox.showinfo(
-            title="Success", message="Finished capturing screen.", parent=self
-        )
 
     def create_pdf_button_clicked(self):
         """
