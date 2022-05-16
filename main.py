@@ -1,4 +1,5 @@
-"""Main file of the ScreenGrab tool.
+"""
+Main file of the ScreenGrab tool.
 Use to grab docs or images from screen one page at a time.
 """
 

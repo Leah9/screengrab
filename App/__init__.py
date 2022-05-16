@@ -1,5 +1,7 @@
-"""This file is so Python identifies this folder as a package.
-This should import all app windows."""
+"""
+This file is so Python identifies this folder as a package.
+This should import all app windows.
+"""
 
 # The imports below exist so we can import as:
 # import app

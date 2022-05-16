@@ -49,8 +49,10 @@ class MainWindow(tk.Tk):
         self.geometry(f"+{self.x_offset}+{self.y_offset}")
 
     def _draw_screen(self):
-        """This function is inteded to be called when constructing this class (in __init__).
-        \rThis is where all the main widgets are supposed to be packed."""
+        """
+        This function is inteded to be called when constructing this class (in __init__).
+        This is where all the main widgets are supposed to be packed.
+        """
 
         self.attributes("-topmost", True)  # Keeps GUI on top
         self.config(padx=30, pady=15)
@@ -187,8 +189,10 @@ class MainWindow(tk.Tk):
         return (self.x1, self.y1, self.x2 - self.x1, self.y2 - self.y1)
 
     def get_box_button_clicked(self):
-        """This function will capture two points on the screen to create a bounding box.
-        \rIt's called when the Get Box button is clicked"""
+        """
+        This function will capture two points on the screen to create a bounding box.
+        It's called when the Get Box button is clicked
+        """
         messagebox.showinfo(
             title="Attention: TOP LEFT",
             message="Position your mouse and press enter to capture TOP LEFT position.",
@@ -223,8 +227,10 @@ class MainWindow(tk.Tk):
         # print(pyautogui.position())
 
     def capture_button_clicked(self, control_hiding_state=True):
-        """This will capture an screen shot of the bounding box area when called.
-        \rIts main use is when the Capture button is clicked."""
+        """
+        This will capture an screen shot of the bounding box area when called.
+        Its main use is when the Capture button is clicked.
+        """
         print("Button clicked")
         # Hide GUI while capture takes place only if auto hide is True
         print(f"Auto hide {self.auto_hide.get()}")
@@ -246,8 +252,10 @@ class MainWindow(tk.Tk):
         print(self.image_no)
 
     def auto_button_clicked(self):
-        """This will "auto click the capture button" (or, rather, call its function) for a
-        \rgiven amount of times. That amount is written in the entry box."""
+        """
+        This will "auto click the capture button" (or, rather, call its function) for a
+        given amount of times. That amount is written in the entry box.
+        """
         self.show_image = False
         # This breaks auto capture, the 5 second delay is to allow the user to get focus on the
         # intended app / site to advance through pages e.g. Box.com
@@ -281,7 +289,9 @@ class MainWindow(tk.Tk):
         )
 
     def create_pdf_button_clicked(self):
-        """This function will concatenate all images in the img_dir folder into a PDF."""
+        """
+        This function will concatenate all images in the img_dir folder into a PDF.
+        """
         print("Getting list of images from img folder")
         images_list = os.listdir(self.img_dir)
         print(images_list)
@@ -304,8 +314,10 @@ class MainWindow(tk.Tk):
         )
 
     def switch_hiding_state(self, _event=None):
-        """This function switchs the "hiding state" of the window every time it's called
-        \rThis is used to decide whether the main window is gonna hide during auto mode."""
+        """
+        This function switchs the "hiding state" of the window every time it's called
+        This is used to decide whether the main window is gonna hide during auto mode.
+        """
         self.widgets["auto_hide_switch"].configure(
             image=self.showing_gui if self.auto_hide.get() else self.hiding_gui
         )
