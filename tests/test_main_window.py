@@ -12,6 +12,8 @@ py -m pytest
 """
 
 import os
+from tkinter import TclError
+import pytest
 from PIL import Image
 import App
 
@@ -19,12 +21,35 @@ if not os.path.exists("img"):
     os.makedirs("img")
 
 
-def test_capture_size_full_screen():
+@pytest.mark.parametrize(
+    "left,top,right,down",
+    [
+        (0, 0, 1920, 1080),
+        (1000, 80, 1920, 1080),
+        (0, 0, 100, 1080),
+        (0, 0, 1920, 100),
+        (1, 1, 100, 1080),
+        (1, 1, 1920, 100),
+        (0, 0, 200, 200),
+        (200, 200, 400, 400),
+        (200, 200, 450, 450),
+        (250, 250, 400, 400),
+    ],
+)
+def test_capture_sizes(left, top, right, down):
     """
     This will assert capture_button_clicked captures images of the
-    correct expected size: (1920, 1080)
+    correct expected size.
     """
-    root = App.MainWindow(0, 0, 1920, 1080)
+    try:
+        # Sometimes this will throw a TclError (??)
+        root = App.MainWindow(left, top, right, down)
+    except TclError:
+        # If we try again it usually works
+        root = App.MainWindow(left, top, right, down)
+        # (my guess is that it tries to access a file that's
+        # still being used by the last test)
+
     root.capture_button_clicked()
     root.capture_button_clicked()
     root.capture_button_clicked()
@@ -32,38 +57,13 @@ def test_capture_size_full_screen():
     root.destroy()
 
     image = Image.open(os.path.join(root.img_dir, "image1001.png"), mode="r")
-    assert image.size == (1920, 1080)
+    assert image.size == (right - left, down - top)
 
     image = Image.open(os.path.join(root.img_dir, "image1002.png"), mode="r")
-    assert image.size == (1920, 1080)
+    assert image.size == (right - left, down - top)
 
     image = Image.open(os.path.join(root.img_dir, "image1003.png"), mode="r")
-    assert image.size == (1920, 1080)
+    assert image.size == (right - left, down - top)
 
     image = Image.open(os.path.join(root.img_dir, "image1004.png"), mode="r")
-    assert image.size == (1920, 1080)
-
-
-def test_capture_size_small_box():
-    """
-    This will assert capture_button_clicked captures images of the
-    correct expected size: (200, 200).
-    """
-    root = App.MainWindow(200, 200, 400, 400)
-    root.capture_button_clicked()
-    root.capture_button_clicked()
-    root.capture_button_clicked()
-    root.capture_button_clicked()
-    root.destroy()
-
-    image = Image.open(os.path.join(root.img_dir, "image1001.png"), mode="r")
-    assert image.size == (200, 200)
-
-    image = Image.open(os.path.join(root.img_dir, "image1002.png"), mode="r")
-    assert image.size == (200, 200)
-
-    image = Image.open(os.path.join(root.img_dir, "image1003.png"), mode="r")
-    assert image.size == (200, 200)
-
-    image = Image.open(os.path.join(root.img_dir, "image1004.png"), mode="r")
-    assert image.size == (200, 200)
+    assert image.size == (right - left, down - top)
