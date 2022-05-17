@@ -1,13 +1,17 @@
-"""This is a window that will pop up when selecting auto mode.
-You'll find the button options here."""
+"""
+This is a window that will pop up when selecting auto mode.
+You'll find the button options here.
+"""
 
 import tkinter as tk
 from tkinter import ttk
 
 
 class AutoWindow(tk.Toplevel):
-    """This is a pop up window for selecting the button press of the
-    \rauto_button_clicked function"""
+    """
+    This is a pop up window for selecting the button press of the
+    auto_button_clicked function
+    """
 
     def __init__(self, parent):
         super().__init__(parent)
@@ -66,7 +70,9 @@ class AutoWindow(tk.Toplevel):
         self.inputs["OkBTN"].pack(pady=4, fill=tk.BOTH)
 
     def close_window(self):
-        """When the user presses ok on this window this function will be called.
-        \rIt will set pressed_ok to true and close the window."""
+        """
+        When the user presses ok on this window this function will be called.
+        It will set pressed_ok to true and close the window.
+        """
         self.pressed_ok = True
         self.destroy()

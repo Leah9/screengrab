@@ -18,3 +18,4 @@ This should import all app windows."""
 # from .file import SomeClass, SomeVariable, SomeFunction, ...
 
 from .auto_window import AutoWindow
+from .countdown_window import CountdownWindow
