@@ -22,8 +22,7 @@ class MainWindow(tk.Tk):
         self.y1 = y1
         self.x2 = x2
         self.y2 = y2
-        self.font = "helvetica 12"
-        self.option_add("*TCombobox*Listbox.font", self.font)
+        
         # self.image_no = 1001
         self.show_image = False
         self.pages = tk.IntVar(master=self, value=5)
@@ -35,20 +34,24 @@ class MainWindow(tk.Tk):
             "padding": 2,
             "borderwidth": 3,
             "button_bg": "#DEDEDE",
+            "font": "helvetica 12",
         }
+        self.option_add("*TCombobox*Listbox.font", self.params["font"])
         self.widgets = {}
         self.style = ttk.Style()
         # Checks for OS type, "Vista theme does not work on Linux"
         if os.name == "nt":
             self.style.theme_use("vista")
-        self.style.configure("my.TButton", font=self.font)
+        self.style.configure("my.TButton", font=self.params["font"])
 
         self._draw_screen()
         self.img_dir = "img"
 
-        self.x_offset = int(0.05 * self.winfo_screenwidth())
-        self.y_offset = int(0.15 * self.winfo_screenheight())
-        self.geometry(f"+{self.x_offset}+{self.y_offset}")
+        self.offset = {
+            "x": int(0.05 * self.winfo_screenwidth()),
+            "y": int(0.15 * self.winfo_screenheight()),
+        }
+        self.geometry(f"+{self.offset['x']}+{self.offset['y']}")
 
     def _draw_screen(self):
         """
@@ -101,7 +104,7 @@ class MainWindow(tk.Tk):
             self,
             justify=tk.CENTER,
             width=pages_entry_box_width,
-            font=self.font,
+            font=self.params["font"],
             textvariable=self.pages,
         )
         pages_entry_box.grid(
@@ -160,9 +163,9 @@ class MainWindow(tk.Tk):
 
         message = tk.Label(
             self,
-            text="Auto Hide:\n{}".format("ON" if self.auto_hide.get() else "OFF"),
+            text=f"Auto Hide:\n{'ON' if self.auto_hide.get() else 'OFF'}",
             justify="center",
-            font=self.font,
+            font=self.params["font"],
         )
         message.grid(row=3, column=1)
 
