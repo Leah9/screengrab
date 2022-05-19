@@ -17,7 +17,7 @@ def main():
     if not os.path.exists(root.img_dir):
         os.makedirs(root.img_dir)
 
-    print("get box :" + str(root.region))
+    print("get box: " + str(root.region))
     pyautogui.FAILSAFE = True
     pyautogui.PAUSE = 0.5
     print(pyautogui.size())  # Prints screen resolution
