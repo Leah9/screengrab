@@ -1,4 +1,6 @@
-"""This file is where the Class of the main window of the App is implemented."""
+"""
+This file is where the main window of the App is implemented.
+"""
 
 import os
 import time
@@ -21,7 +23,7 @@ class MainWindow(tk.Tk):
         self.x2 = x2
         self.y2 = y2
 
-        self.image_no = 1001
+        # self.image_no = 1001
         self.show_image = False
         self.pages = tk.IntVar(master=self, value=5)
         self.auto_hide = tk.BooleanVar(master=self, value=True)
@@ -234,9 +236,9 @@ class MainWindow(tk.Tk):
         This will capture an screen shot of the bounding box area when called.
         Its main use is when the Capture button is clicked.
         """
-        print("Button clicked")
+        # print("Button clicked")
         # Hide GUI while capture takes place only if auto hide is True
-        print(f"Auto hide {self.auto_hide.get()}")
+        # print(f"Auto hide {self.auto_hide.get()}")
         # print("Show image " + str(self.show_image))
         if self.auto_hide.get() and control_hiding_state:
             self.withdraw()
@@ -250,9 +252,19 @@ class MainWindow(tk.Tk):
 
         if self.show_image:
             image.show()
-        image.save(f"{self.img_dir}/image{self.image_no}.png")
-        self.image_no += 1
-        print(self.image_no)
+
+        curr_time = time.time()
+        time_struct = time.localtime(curr_time)
+
+        mili_sec_day = 1000 * round(
+            (curr_time + time_struct.tm_gmtoff) % (24 * 60 * 60), 3
+        )
+
+        time_stamp = time.strftime("%Y-%m-%d", time_struct) + f"_{mili_sec_day:.0f}"
+
+        image.save(f"{self.img_dir}/SG_{time_stamp}.png")
+        # self.image_no += 1
+        # print(self.image_no)
 
     def auto_button_clicked(self):
         """
@@ -283,10 +295,10 @@ class MainWindow(tk.Tk):
         new_window = top_levels.CountdownWindow(self)
         if not new_window.pressed_cancel:
             time.sleep(0.1)
-            for _ in range(self.pages.get()):
+            for curr_img in range(1, self.pages.get() + 1):
                 self.capture_button_clicked(control_hiding_state=False)
                 pyautogui.press(button)
-                print(f"Captured image {self.image_no}")
+                print(f"Captured image {curr_img:03}")
             messagebox.showinfo(
                 title="Success", message="Finished capturing screen.", parent=self
             )
