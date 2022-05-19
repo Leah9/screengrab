@@ -26,17 +26,13 @@ class AutoWindow(tk.Toplevel):
         self.attributes("-topmost", True)
         self._draw_window()
 
+        self.withdraw()
         x_offset = self.parent.winfo_rootx() + self.parent.winfo_width() // 2
         y_offset = self.parent.winfo_rooty() + self.parent.winfo_height() // 2 - 30
-        self.withdraw()
         self.update()
-        self.geometry(
-            "+%d+%d"
-            % (
-                x_offset - self.winfo_width() // 2,
-                y_offset - self.winfo_height() // 2,
-            )
-        )
+        x_offset -= self.winfo_width() // 2
+        y_offset -= self.winfo_height() // 2
+        self.geometry(f"+{x_offset}+{y_offset}")
         self.deiconify()
 
         self.grab_set()
@@ -50,7 +46,7 @@ class AutoWindow(tk.Toplevel):
             state="readonly",
             values=self.buttons_available,
             justify="center",
-            font=self.parent.font,
+            font=self.parent.params["font"],
             width=3 * self.parent.params["width"] // 2 - 1,
         )
         self.inputs["OpMenu"].pack(pady=4, ipady=8, fill=tk.BOTH)
