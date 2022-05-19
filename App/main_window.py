@@ -253,11 +253,8 @@ class MainWindow(tk.Tk):
         curr_time = time.time()
         time_struct = time.localtime(curr_time)
 
-        mili_sec_day = 1000 * round(
-            (curr_time + time_struct.tm_gmtoff) % (24 * 60 * 60), 3
-        )
-
-        time_stamp = time.strftime("%Y-%m-%d", time_struct) + f"_{mili_sec_day:.0f}"
+        mili_sec = round(1000 * (round(curr_time, 3) - (curr_time // 1)))
+        time_stamp = time.strftime("%Y-%m-%d_%H%M%S", time_struct) + f"{mili_sec:03}"
 
         image.save(f"{self.img_dir}/SG_{time_stamp}.png")
         # self.image_no += 1
