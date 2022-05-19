@@ -12,6 +12,7 @@ py -m pytest
 """
 
 import os
+from glob import glob
 from tkinter import TclError
 import pytest
 from PIL import Image
@@ -56,14 +57,15 @@ def test_capture_sizes(left, top, right, down):
     root.capture_button_clicked()
     root.destroy()
 
-    image = Image.open(os.path.join(root.img_dir, "image1001.png"), mode="r")
+    imgs = glob("./**/*.png")
+    image = Image.open(imgs[-4], mode="r")
     assert image.size == (right - left, down - top)
 
-    image = Image.open(os.path.join(root.img_dir, "image1002.png"), mode="r")
+    image = Image.open(imgs[-3], mode="r")
     assert image.size == (right - left, down - top)
 
-    image = Image.open(os.path.join(root.img_dir, "image1003.png"), mode="r")
+    image = Image.open(imgs[-2], mode="r")
     assert image.size == (right - left, down - top)
 
-    image = Image.open(os.path.join(root.img_dir, "image1004.png"), mode="r")
+    image = Image.open(imgs[-1], mode="r")
     assert image.size == (right - left, down - top)
