@@ -191,6 +191,18 @@ class MainWindow(tk.Tk):
         """Property that returns a region."""
         return (self.x1, self.y1, self.x2 - self.x1, self.y2 - self.y1)
 
+    @property
+    def img_dir(self):
+        """Property that returns the image directory."""
+        return self._img_dir
+
+    @img_dir.setter
+    def img_dir(self, img_dir):
+        """Property that sets the image directory."""
+        if not os.path.exists(img_dir):
+            os.makedirs(img_dir)
+        self._img_dir = img_dir
+
     def get_box_button_clicked(self):
         """
         This function will capture two points on the screen to create a bounding box.
