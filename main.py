@@ -18,8 +18,7 @@ def main():
     pyautogui.PAUSE = 0.5
     print(pyautogui.size())  # Prints screen resolution
     print(root.img_dir)
-
-    # Start the GUI
+    # # Start the GUI
     root.mainloop()
 
 

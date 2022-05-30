@@ -5,7 +5,7 @@ This file is where the main window of the App is implemented.
 import os
 import time
 import tkinter as tk
-from tkinter import messagebox, ttk
+from tkinter import PhotoImage, messagebox, ttk
 import pyautogui
 from PIL import Image
 from fpdf import FPDF
@@ -43,6 +43,8 @@ class MainWindow(tk.Tk):
         if os.name == "nt":
             self.style.theme_use("vista")
         self.style.configure("my.TButton", font=self.params["font"])
+        # Set icon for main window, True also sets other called windows
+        self.iconphoto(True, tk.PhotoImage(file='./App/icon.png'))
 
         self._draw_screen()
         self.img_dir = "img"
@@ -62,7 +64,8 @@ class MainWindow(tk.Tk):
         self.attributes("-topmost", True)  # Keeps GUI on top
         self.config(padx=30, pady=15)
         # Place a label on the root window
-        message = tk.Label(self, text="ScreenGrab", justify="right", font="arial 15")
+        message = tk.Label(self, text="ScreenGrab",
+                           justify="right", font="arial 15")
         message.grid(row=0, column=0, columnspan=3, pady=10, sticky="NEWS")
 
         get_box_button = ttk.Button(
@@ -151,14 +154,16 @@ class MainWindow(tk.Tk):
 
         # Green
         self.hiding_gui = tk.PhotoImage(width=51, height=26)
-        self.hiding_gui.put(("#52C788",), to=(0, 0, 24, 24))  # (LEFT, TOP, RIGHT, DOWN)
-        # This is the box format that's gonna be drawn with the given the color in relation
+        self.hiding_gui.put(("#52C788",), to=(0, 0, 24, 24)
+                            )  # (LEFT, TOP, RIGHT, DOWN)
+        # This is the box format that's going to be drawn with the given the color in relation
         # to the PhotoImage.
 
         # Red
         self.showing_gui = tk.PhotoImage(width=51, height=26)
-        self.showing_gui.put(("#F33",), to=(25, 0, 49, 24))  # (LEFT, TOP, RIGHT, DOWN)
-        # This is the box format that's gonna be drawn with the given the color in relation
+        self.showing_gui.put(("#F33",), to=(25, 0, 49, 24)
+                             )  # (LEFT, TOP, RIGHT, DOWN)
+        # This is the box format that's going to be drawn with the given the color in relation
         # to the PhotoImage.
 
         message = tk.Label(
@@ -183,7 +188,8 @@ class MainWindow(tk.Tk):
                 text=f"Auto Hide:\n{'ON' if self.auto_hide.get() else 'OFF'}"
             ),
         )
-        self.widgets["auto_hide_switch"].grid(row=3, column=2, pady=self.params["pady"])
+        self.widgets["auto_hide_switch"].grid(
+            row=3, column=2, pady=self.params["pady"])
         self.widgets["auto_hide_switch"].bind(
             "<ButtonRelease-1>", self.switch_hiding_state
         )
@@ -213,7 +219,8 @@ class MainWindow(tk.Tk):
         messagebox.showinfo(
             title="Attention: TOP LEFT",
             message="Position your mouse and press enter to capture TOP LEFT position.",
-            icon="question",  # This specific icon removes the bell noise from the messagebox.
+            # This specific icon removes the bell noise from the messagebox.
+            icon="question",
             parent=self,
         )
         # print("Top left position in 5 seconds")
@@ -240,9 +247,6 @@ class MainWindow(tk.Tk):
             title="Finished", message=f"Captured area was {self.region}", parent=self
         )
 
-        # print("Captured area")
-        # print(pyautogui.position())
-
     def capture_button_clicked(self, control_hiding_state=True):
         """
         This will capture an screen shot of the bounding box area when called.
@@ -255,7 +259,7 @@ class MainWindow(tk.Tk):
         if self.auto_hide.get() and control_hiding_state:
             self.withdraw()
             # Without the delay we capture a faded area of the GUI 0.2 seems to be the lowest delay
-            time.sleep(0.25)
+            time.sleep(0.2)
             image = pyautogui.screenshot(region=self.region)
             self.deiconify()
         else:
@@ -269,7 +273,8 @@ class MainWindow(tk.Tk):
         time_struct = time.localtime(curr_time)
 
         mili_sec = round(1000 * (round(curr_time, 3) - (curr_time // 1)))
-        time_stamp = time.strftime("%Y-%m-%d_%H%M%S", time_struct) + f"{mili_sec:03}"
+        time_stamp = time.strftime(
+            "%Y-%m-%d_%H%M%S", time_struct) + f"{mili_sec:03}"
 
         image.save(f"{self.img_dir}/SG_{time_stamp}.png")
         # self.image_no += 1
@@ -316,14 +321,14 @@ class MainWindow(tk.Tk):
 
     def create_pdf_button_clicked(self):
         """
-        This function will concatenate all images in the img_dir folder into a PDF.
+        This function will combine all images in the img_dir folder into Binder.PDF in the root rolder of the app.
         """
-        print("Getting list of images from img folder")
+        print("Getting list of images from img_dir folder")
         images_list = os.listdir(self.img_dir)
         print(images_list)
         pdf = FPDF(
             "l", "pt", "A4"
-        )  # Init pdf l = landscape, pt = points / pixels, A4 default size
+        )  # These defaults are required, Init pdf l = landscape, pt = points / pixels, A4 default size
         pdf.set_auto_page_break(True)
         pdf.set_margins(0, 0)
         for img in images_list:
@@ -331,7 +336,7 @@ class MainWindow(tk.Tk):
             print(timage.width, timage.height)
             # Below will add a page the same size as the image.
             pdf.add_page(format=(timage.height, timage.width))
-            # format keyword gives out an error if using fpdf, fpdf2 is required
+            # Format keyword gives out an error if using fpdf, fpdf2 is required
             # pip uninstall fpdf, pip install fpdf2
             pdf.image(f"{self.img_dir}/{img}")
         pdf.output("Binder.pdf")
