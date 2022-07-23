@@ -44,8 +44,13 @@ class MainWindow(tk.Tk):
         if os.name == "nt":
             self.style.theme_use("vista")
         self.style.configure("my.TButton", font=self.params["font"])
+
+        self.root_dir = os.path.realpath(os.path.join(os.path.dirname(__file__), ".."))
+
         # Set icon for main window, True also sets other called windows
-        self.iconphoto(True, tk.PhotoImage(file="./App/icon.png"))
+        self.iconphoto(
+            True, tk.PhotoImage(file=os.path.join(self.root_dir, "App", "icon.png"))
+        )
 
         self._draw_screen()
         self.img_dir: str = "img"
