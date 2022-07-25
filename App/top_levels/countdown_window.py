@@ -17,12 +17,12 @@ class CountdownWindow(tk.Toplevel):
         super().__init__(parent)
         self.parent = parent
         self.title("Countdown")
-        self.pressed_cancel = False
+        self.pressed_cancel: bool = False
         self.countdown_var = tk.IntVar(master=self, value=5)
-        self.widgets = {}
+        self.widgets: dict = {}
 
-        x_offset = 50
-        y_offset = 50
+        x_offset: int = 50
+        y_offset: int = 50
         self.geometry(f"+{x_offset}+{y_offset}")
 
         self.config(padx=5, pady=5)
@@ -73,7 +73,7 @@ class CountdownWindow(tk.Toplevel):
         This function will call itself every second until self.countdown_var is about
         to hit 0.
         """
-        current_count = self.countdown_var.get() - 1
+        current_count: int = self.countdown_var.get() - 1
         self.countdown_var.set(current_count)
 
         if current_count == 0:
@@ -93,4 +93,4 @@ if __name__ == "__main__":
 
     root = App.MainWindow(0, 0, 20, 20)
     root.withdraw()
-    CD_w = CountdownWindow(root)
+    CD_window = CountdownWindow(root)

@@ -5,29 +5,30 @@ This file is where the main window of the App is implemented.
 import os
 import time
 import tkinter as tk
-from tkinter import PhotoImage, messagebox, ttk
-import pyautogui
-from PIL import Image
-from fpdf import FPDF
+from tkinter import messagebox, ttk
+import pyautogui  # type: ignore[import]
+from PIL import Image  # type: ignore[import]
+from fpdf import FPDF  # type: ignore[import]
 from . import top_levels
 
 
 class MainWindow(tk.Tk):
     """Main window of the App."""
 
-    def __init__(self, x1=0, y1=0, x2=640, y2=480):  # Use sensible defaults
+    # Use sensible defaults
+    def __init__(self, x1: int = 0, y1: int = 0, x2: int = 640, y2: int = 480):
         super().__init__()
         self.title("ScreenGrab")
-        self.x1 = x1
-        self.y1 = y1
-        self.x2 = x2
-        self.y2 = y2
+        self.x1: int = x1
+        self.y1: int = y1
+        self.x2: int = x2
+        self.y2: int = y2
 
         # self.image_no = 1001
-        self.show_image = False
+        self.show_image: bool = False
         self.pages = tk.IntVar(master=self, value=5)
         self.auto_hide = tk.BooleanVar(master=self, value=True)
-        self.params = {
+        self.params: dict = {
             "width": 11,
             "pady": 8,
             "ipady": 12,
@@ -37,19 +38,24 @@ class MainWindow(tk.Tk):
             "font": "helvetica 12",
         }
         self.option_add("*TCombobox*Listbox.font", self.params["font"])
-        self.widgets = {}
+        self.widgets: dict = {}
         self.style = ttk.Style()
         # Checks for OS type, "Vista theme does not work on Linux"
         if os.name == "nt":
             self.style.theme_use("vista")
         self.style.configure("my.TButton", font=self.params["font"])
+
+        self.root_dir = os.path.realpath(os.path.join(os.path.dirname(__file__), ".."))
+
         # Set icon for main window, True also sets other called windows
-        self.iconphoto(True, tk.PhotoImage(file='./App/icon.png'))
+        self.iconphoto(
+            True, tk.PhotoImage(file=os.path.join(self.root_dir, "App", "icon.png"))
+        )
 
         self._draw_screen()
-        self.img_dir = "img"
+        self.img_dir: str = "img"
 
-        self.offset = {
+        self.offset: dict = {
             "x": int(0.05 * self.winfo_screenwidth()),
             "y": int(0.15 * self.winfo_screenheight()),
         }
@@ -64,8 +70,7 @@ class MainWindow(tk.Tk):
         self.attributes("-topmost", True)  # Keeps GUI on top
         self.config(padx=30, pady=15)
         # Place a label on the root window
-        message = tk.Label(self, text="ScreenGrab",
-                           justify="right", font="arial 15")
+        message = tk.Label(self, text="ScreenGrab", justify="right", font="arial 15")
         message.grid(row=0, column=0, columnspan=3, pady=10, sticky="NEWS")
 
         get_box_button = ttk.Button(
@@ -154,15 +159,13 @@ class MainWindow(tk.Tk):
 
         # Green
         self.hiding_gui = tk.PhotoImage(width=51, height=26)
-        self.hiding_gui.put(("#52C788",), to=(0, 0, 24, 24)
-                            )  # (LEFT, TOP, RIGHT, DOWN)
+        self.hiding_gui.put(("#52C788",), to=(0, 0, 24, 24))  # (LEFT, TOP, RIGHT, DOWN)
         # This is the box format that's going to be drawn with the given the color in relation
         # to the PhotoImage.
 
         # Red
         self.showing_gui = tk.PhotoImage(width=51, height=26)
-        self.showing_gui.put(("#F33",), to=(25, 0, 49, 24)
-                             )  # (LEFT, TOP, RIGHT, DOWN)
+        self.showing_gui.put(("#F33",), to=(25, 0, 49, 24))  # (LEFT, TOP, RIGHT, DOWN)
         # This is the box format that's going to be drawn with the given the color in relation
         # to the PhotoImage.
 
@@ -188,8 +191,7 @@ class MainWindow(tk.Tk):
                 text=f"Auto Hide:\n{'ON' if self.auto_hide.get() else 'OFF'}"
             ),
         )
-        self.widgets["auto_hide_switch"].grid(
-            row=3, column=2, pady=self.params["pady"])
+        self.widgets["auto_hide_switch"].grid(row=3, column=2, pady=self.params["pady"])
         self.widgets["auto_hide_switch"].bind(
             "<ButtonRelease-1>", self.switch_hiding_state
         )
@@ -273,8 +275,7 @@ class MainWindow(tk.Tk):
         time_struct = time.localtime(curr_time)
 
         mili_sec = round(1000 * (round(curr_time, 3) - (curr_time // 1)))
-        time_stamp = time.strftime(
-            "%Y-%m-%d_%H%M%S", time_struct) + f"{mili_sec:03}"
+        time_stamp = time.strftime("%Y-%m-%d_%H%M%S", time_struct) + f"{mili_sec:03}"
 
         image.save(f"{self.img_dir}/SG_{time_stamp}.png")
         # self.image_no += 1
@@ -321,14 +322,16 @@ class MainWindow(tk.Tk):
 
     def create_pdf_button_clicked(self):
         """
-        This function will combine all images in the img_dir folder into Binder.PDF in the root rolder of the app.
+        This function will combine all images in the img_dir folder into "Binder.pdf" in the root
+        folder of the app.
         """
         print("Getting list of images from img_dir folder")
         images_list = os.listdir(self.img_dir)
         print(images_list)
-        pdf = FPDF(
-            "l", "pt", "A4"
-        )  # These defaults are required, Init pdf l = landscape, pt = points / pixels, A4 default size
+
+        # Required defaults: Init pdf l = landscape, pt = points / pixels, A4 default size
+        pdf = FPDF("l", "pt", "A4")
+
         pdf.set_auto_page_break(True)
         pdf.set_margins(0, 0)
         for img in images_list:
