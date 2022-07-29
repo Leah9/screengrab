@@ -8,14 +8,14 @@ import tkinter as tk
 from tkinter import PhotoImage, messagebox, ttk
 import pyautogui
 from PIL import Image
-from fpdf import FPDF
+from fpdf import FPDF # Note both fpdf and fpdf2 are installed as fpdf. fpdf2 is required.
 from . import top_levels
 
 
 class MainWindow(tk.Tk):
     """Main window of the App."""
 
-    def __init__(self, x1=0, y1=0, x2=640, y2=480):  # Use sensible defaults
+    def __init__(self, x1=0, y1=0, x2=640, y2=480):  # Use sensible defaults.
         super().__init__()
         self.title("ScreenGrab")
         self.x1 = x1
@@ -39,11 +39,11 @@ class MainWindow(tk.Tk):
         self.option_add("*TCombobox*Listbox.font", self.params["font"])
         self.widgets = {}
         self.style = ttk.Style()
-        # Checks for OS type, "Vista theme does not work on Linux"
+        # Checks for OS type, "Vista theme does not work on Linux".
         if os.name == "nt":
             self.style.theme_use("vista")
         self.style.configure("my.TButton", font=self.params["font"])
-        # Set icon for main window, True also sets other called windows
+        # Set icon for main window, True also sets other called windows.
         self.iconphoto(True, tk.PhotoImage(file='./App/icon.png'))
 
         self._draw_screen()
@@ -61,9 +61,9 @@ class MainWindow(tk.Tk):
         This is where all the main widgets are supposed to be packed.
         """
 
-        self.attributes("-topmost", True)  # Keeps GUI on top
+        self.attributes("-topmost", True)  # Keeps GUI on top.
         self.config(padx=30, pady=15)
-        # Place a label on the root window
+        # Place a label on the root window.
         message = tk.Label(self, text="ScreenGrab",
                            justify="right", font="arial 15")
         message.grid(row=0, column=0, columnspan=3, pady=10, sticky="NEWS")
@@ -84,7 +84,7 @@ class MainWindow(tk.Tk):
             sticky="NEWS",
         )
 
-        # Define the buttons
+        # Define the buttons.
         capture_button = ttk.Button(
             self,
             text="Capture",
@@ -101,7 +101,7 @@ class MainWindow(tk.Tk):
             sticky="NEWS",
         )
 
-        # Text box for number of pages
+        # Text box for number of pages.
         pages_entry_box_width = 1
         pages_entry_box = ttk.Entry(
             self,
@@ -156,7 +156,7 @@ class MainWindow(tk.Tk):
         self.hiding_gui = tk.PhotoImage(width=51, height=26)
         self.hiding_gui.put(("#52C788",), to=(0, 0, 24, 24)
                             )  # (LEFT, TOP, RIGHT, DOWN)
-        # This is the box format that's going to be drawn with the given the color in relation
+        # This is the box format that's going to be drawn with the given the colour in relation
         # to the PhotoImage.
 
         # Red
@@ -214,7 +214,7 @@ class MainWindow(tk.Tk):
     def get_box_button_clicked(self):
         """
         This function will capture two points on the screen to create a bounding box.
-        It's called when the Get Box button is clicked
+        It's called when the Get Box button is clicked.
         """
         messagebox.showinfo(
             title="Attention: TOP LEFT",
@@ -226,7 +226,7 @@ class MainWindow(tk.Tk):
         # print("Top left position in 5 seconds")
         # time.sleep(5)
 
-        # pyautogui.position() gets the x and y position of the mouse the variable is an object
+        # pyautogui.position() gets the x and y position of the mouse the variable is an object.
         x1y1 = pyautogui.position()
 
         messagebox.showinfo(
@@ -239,7 +239,7 @@ class MainWindow(tk.Tk):
         # time.sleep(5)
         x2y2 = pyautogui.position()
 
-        # update the values in the object
+        # Update the values in the object
         self.x1, self.y1 = x1y1
         self.x2, self.y2 = x2y2
         print(self.region)
@@ -278,12 +278,13 @@ class MainWindow(tk.Tk):
 
         image.save(f"{self.img_dir}/SG_{time_stamp}.png")
         # self.image_no += 1
-        # print(self.image_no)
+        # Testing statement
+        # print(self.image_no) 
 
     def auto_button_clicked(self):
         """
         This will "auto click the capture button" (or, rather, call its function) for a
-        given amount of times. That amount is written in the entry box.
+        the number of pages in the entry box.
         """
         self.show_image = False
         # This breaks auto capture, the 5 second delay is to allow the user to get focus on the
@@ -303,11 +304,12 @@ class MainWindow(tk.Tk):
 
         print("Starting auto capture in 5 seconds")
         # self.auto_hide.set(False)
-        # time.sleep(5)
+        # time.sleep(5) 
         if self.auto_hide.get():
             self.withdraw()
         new_window = top_levels.CountdownWindow(self)
         if not new_window.pressed_cancel:
+            # If the sleep timer is any shorter the image captured may show transition effects.
             time.sleep(0.1)
             for curr_img in range(1, self.pages.get() + 1):
                 self.capture_button_clicked(control_hiding_state=False)
@@ -328,7 +330,7 @@ class MainWindow(tk.Tk):
         print(images_list)
         pdf = FPDF(
             "l", "pt", "A4"
-        )  # These defaults are required, Init pdf l = landscape, pt = points / pixels, A4 default size
+        )  # These defaults are required, Init pdf l = landscape, pt = points / pixels, A4 is the default size.
         pdf.set_auto_page_break(True)
         pdf.set_margins(0, 0)
         for img in images_list:
@@ -336,9 +338,10 @@ class MainWindow(tk.Tk):
             print(timage.width, timage.height)
             # Below will add a page the same size as the image.
             pdf.add_page(format=(timage.height, timage.width))
-            # Format keyword gives out an error if using fpdf, fpdf2 is required
-            # pip uninstall fpdf, pip install fpdf2
+            # Format keyword gives an error if using fpdf, fpdf2 is required.
+            # Please remove fpdf 'pip uninstall fpdf' then 'pip install fpdf2'.
             pdf.image(f"{self.img_dir}/{img}")
+        # Save the compiled images as a pdf document.   
         pdf.output("Binder.pdf")
         messagebox.showinfo(
             title="Success", message="Finished creating PDF.", parent=self
@@ -347,7 +350,7 @@ class MainWindow(tk.Tk):
     def switch_hiding_state(self, _event=None):
         """
         This function switchs the "hiding state" of the window every time it's called
-        This is used to decide whether the main window is gonna hide during auto mode.
+        This is used to decide whether the main window is going to hide during auto mode.
         """
         self.widgets["auto_hide_switch"].configure(
             image=self.showing_gui if self.auto_hide.get() else self.hiding_gui
