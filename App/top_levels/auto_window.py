@@ -17,18 +17,24 @@ class AutoWindow(tk.Toplevel):
         super().__init__(parent)
         self.title("Auto Mode")
         self.parent = parent
-        self.pressed_ok = False
+        self.pressed_ok: bool = False
         self.button_selected = tk.StringVar(master=self, value="Down")
-        self.buttons_available = ["Down", "Up", "PageDown", "PageUp", "Enter"]
-        self.inputs = {}
+        self.inputs: dict = {}
+        self.buttons_available: list[str] = [
+            "Down",
+            "Up",
+            "PageDown",
+            "PageUp",
+            "Enter",
+        ]
 
         self.config(padx=60, pady=35)
         self.attributes("-topmost", True)
         self._draw_window()
 
         self.withdraw()
-        x_offset = self.parent.winfo_rootx() + self.parent.winfo_width() // 2
-        y_offset = self.parent.winfo_rooty() + self.parent.winfo_height() // 2 - 30
+        x_offset: int = self.parent.winfo_rootx() + self.parent.winfo_width() // 2
+        y_offset: int = self.parent.winfo_rooty() + self.parent.winfo_height() // 2 - 30
         self.update()
         x_offset -= self.winfo_width() // 2
         y_offset -= self.winfo_height() // 2
