@@ -8,14 +8,14 @@ import tkinter as tk
 from tkinter import messagebox, ttk
 import pyautogui  # type: ignore[import]
 from PIL import Image  # type: ignore[import]
-from fpdf import FPDF  # type: ignore[import]
+from fpdf import FPDF  # type: ignore[import] fpdf 2 is required.
 from . import top_levels
 
 
 class MainWindow(tk.Tk):
     """Main window of the App."""
 
-    # Use sensible defaults
+    # Use sensible defaults.
     def __init__(self, x1: int = 0, y1: int = 0, x2: int = 640, y2: int = 480):
         super().__init__()
         self.title("ScreenGrab")
@@ -47,7 +47,7 @@ class MainWindow(tk.Tk):
 
         self.root_dir = os.path.realpath(os.path.join(os.path.dirname(__file__), ".."))
 
-        # Set icon for main window, True also sets other called windows
+        # Set icon for main window, True also sets other called windows.
         self.iconphoto(
             True, tk.PhotoImage(file=os.path.join(self.root_dir, "App", "icon.png"))
         )
@@ -69,7 +69,7 @@ class MainWindow(tk.Tk):
 
         self.attributes("-topmost", True)  # Keeps GUI on top.
         self.config(padx=30, pady=15)
-        # Place a label on the root window
+        # Place a label on the root window.
         message = tk.Label(self, text="ScreenGrab", justify="right", font="arial 15")
         message.grid(row=0, column=0, columnspan=3, pady=10, sticky="NEWS")
 
@@ -106,7 +106,7 @@ class MainWindow(tk.Tk):
             sticky="NEWS",
         )
 
-        # Text box for number of pages.
+        # Text box for the number of pages.
         pages_entry_box_width = 1
         pages_entry_box = ttk.Entry(
             self,
@@ -160,7 +160,7 @@ class MainWindow(tk.Tk):
         # Green
         self.hiding_gui = tk.PhotoImage(width=51, height=26)
         self.hiding_gui.put(("#52C788",), to=(0, 0, 24, 24))  # (LEFT, TOP, RIGHT, DOWN)
-        # This is the box format that's going to be drawn with the given the color in relation
+        # This is the box format that is going to be drawn with the given the color in relation
         # to the PhotoImage.
 
         # Red
