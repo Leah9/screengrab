@@ -14,7 +14,7 @@ Required libraries
 ## Please carry out the following to check the main functionality of the code.
 * The app needs to be able to capture a user selected area of the screen.
 * It needs to process all images into a pdf
-* Navigate here https://app.box.com/s/xtt0vzw90ocmhajgtp2sxo387kqy5ibn and use auto mode to capture the 3 pages and combine in to a pdf.
+* Navigate [here](https://app.box.com/s/xtt0vzw90ocmhajgtp2sxo387kqy5ibn) and use auto mode to capture the 3 pages and combine in to a pdf.
 * The above is easier in Edge full screen mode F11, zoom in / out to fit the page to the screen.
 
 
