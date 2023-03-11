@@ -32,8 +32,7 @@ This application now also saves the files as a multi-page pdf.
 
 ## OCR ?
 I have looked at doing this and the current conclusion is that it is too complex to add to this project.
-The generated pdf can be OCR'd using the following :
-ocrmypdf https://ocrmypdf.readthedocs.io/en/latest/index.html
+The generated pdf can be OCR'd using the following : [ocrmypdf](https://ocrmypdf.readthedocs.io/en/latest/index.html)
 It is not a casual installation but it is very quick once it is working especially on a multi-core machine.
 
 ## Compatibility
