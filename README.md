@@ -14,7 +14,7 @@ Required libraries
 ## Please carry out the following to check the main functionality of the code.
 * The app needs to be able to capture a user selected area of the screen.
 * It needs to process all images into a pdf
-* Navigate here https://app.box.com/s/xtt0vzw90ocmhajgtp2sxo387kqy5ibn and use auto mode to capture the 3 pages and combine in to a pdf.
+* Navigate [here](https://app.box.com/s/xtt0vzw90ocmhajgtp2sxo387kqy5ibn) and use auto mode to capture the 3 pages and combine in to a pdf.
 * The above is easier in Edge full screen mode F11, zoom in / out to fit the page to the screen.
 
 
@@ -32,8 +32,7 @@ This application now also saves the files as a multi-page pdf.
 
 ## OCR ?
 I have looked at doing this and the current conclusion is that it is too complex to add to this project.
-The generated pdf can be OCR'd using the following :
-ocrmypdf https://ocrmypdf.readthedocs.io/en/latest/index.html
+The generated pdf can be OCR'd using the following : [ocrmypdf](https://ocrmypdf.readthedocs.io/en/latest/index.html)
 It is not a casual installation but it is very quick once it is working especially on a multi-core machine.
 
 ## Compatibility
