@@ -1,5 +1,15 @@
 # Screen Grab [![Windows Tests](https://github.com/ArielMAJ/screengrab/actions/workflows/windows-tests.yml/badge.svg)](https://github.com/ArielMAJ/screengrab/actions/workflows/windows-tests.yml)
 
+## Table of Contents
+
+- [Important notes](#important-notes)
+- [Testing functionality](#testing-functionality)
+- [Intended Purpose](#intended-purpose)
+- [Why Do I Need This](#why-do-i-need-this)
+- [Why Not Use Snip](#why-not-use-snip)
+- [OCR ?](#ocr-)
+- [Compatibility](#compatibility)
+
 ## Important notes
 
 FPDF2 is required in order to create a pdf with the correct dimensions.
